@@ -1,0 +1,15 @@
+# Включаем модуль переписывания
+RewriteEngine On
+
+# Путь до корня сайта
+RewriteBase /
+
+#Options FollowSymlinks
+
+# Исключения - адреса, которые не нужно переписывать
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-1
+
+# Правила замены URL
+RewriteRule ^(.*)$ index.php [QSA]
