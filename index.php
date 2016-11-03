@@ -3,8 +3,9 @@
 include_once(__DIR__ . '/config.php');
 include_once(__DIR__ . '/autoload.php');
 
-$ex = new App\Model\Image($_FILES['image']);
-var_dump($ex);
+$user = new App\Models\User;
+$user = App\Models\User::get();
+var_dump($user);
 
 
 /*$formSend = false;

@@ -1,8 +1,8 @@
 <?php
 
-///
-/// Класс для работы с отзывами
-///
+/**
+*   Класс для работы с отзывами
+*/
 
 namespace App\Model;
 
@@ -21,9 +21,9 @@ class Comment extends Model
     public $approved;                   // был ли отзыв одобрен
 
 
-    //
-    // Конструктор
-    //
+    /**
+    *   Конструктор
+    */
     public function __construct()
     {
 
@@ -33,12 +33,12 @@ class Comment extends Model
         self::db = MSQL::instance();
     }
 
-    //
-    // Валидация комментария
-    // Результат - массив наличия ошибок $error
-    // $error['exist'] - true (1) / false (0) - есть ли вообще ошибки
-    // $error['name', 'email', 'text'] - есть ли ошибки в имени, email, тексте
-    //
+    /**
+    *   Валидация комментария
+    *   Результат - массив наличия ошибок $error
+    *   $error['exist'] - true (1) / false (0) - есть ли вообще ошибки
+    *   $error['name', 'email', 'text'] - есть ли ошибки в имени, email, тексте
+    */
     public function validat($name, $email, $text)
     {
 
@@ -68,10 +68,10 @@ class Comment extends Model
         return $error;
     }
 
-    //
-    // Предпросмотр комментария
-    // Результат - массив "поле - значение" либо null
-    //
+    /**
+    *   Предпросмотр комментария
+    *   Результат - массив "поле - значение" либо null
+    */
     public function preview($name, $email, $text)
     {
 
@@ -91,10 +91,10 @@ class Comment extends Model
         return null;
     }
 
-    //
-    // Внесение комментария в базу данных
-    // результат - true / false
-    //
+    /**
+    *   Внесение комментария в базу данных
+    *   результат - true / false
+    */
     public function setCom($name, $email, $text, $image = null)
     {
 
@@ -121,10 +121,10 @@ class Comment extends Model
         return false;
     }
 
-    //
-    // Отображение отзыва по id
-    // Результат -  ассоциативный массив "поле - значение"
-    //
+    /**
+    *   Отображение отзыва по id
+    *   Результат -  ассоциативный массив "поле - значение"
+    */
     public function getById($id_com)
     {
 
@@ -134,10 +134,10 @@ class Comment extends Model
         return $this->db->Select($query);
     }
 
-    //
-    // Сохранение отредактированного комментария
-    // Результат - число записанных строк (1) либо null
-    //
+    /**
+    *   Сохранение отредактированного комментария
+    *   Результат - число записанных строк (1) либо null
+    */
     public function save($name, $email, $text, $id_com)
     {
 
@@ -160,10 +160,10 @@ class Comment extends Model
         return null;
     }
 
-    //
-    // Изменение статуса комментария администратором
-    // Результат - число строк (1) либо null
-    //
+    /**
+    *   Изменение статуса комментария администратором
+    *   Результат - число строк (1) либо null
+    */
     public function approve($id_com)
     {
 
@@ -174,10 +174,10 @@ class Comment extends Model
         return $this->db->Update('comments', $object, $where);
     }
 
-    //
-    // Удаление комментария из базы данных
-    // Результат - 1 либо null
-    //
+    /**
+    *   Удаление комментария из базы данных
+    *   Результат - 1 либо null
+    */
     public function delete($id_com)
     {
 
@@ -186,12 +186,12 @@ class Comment extends Model
         return $this->db->Delete('comments', $where);
     }
 
-    //
-    // Вывести комментарии по: дате (по умолч.), имени, email
-    // $sort - строковый параметр сортировки 'date', 'name' , 'email'
-    // $notapproved - 1 или 0 - выводить ли неодобренные отзывы
-    // Результат - двумерный ассоциативный массив с полями отзывов
-    //
+    /*
+    *   Вывести комментарии по: дате (по умолч.), имени, email
+    *   $sort - строковый параметр сортировки 'date', 'name' , 'email'
+    *   $notapproved - 1 или 0 - выводить ли неодобренные отзывы
+    *   Результат - двумерный ассоциативный массив с полями отзывов
+    */
     public function get($sort, $notApproved = 0)
     {
 

@@ -1,16 +1,15 @@
 <?php
 
+namespace App\Model;
+
 /**
 *   Базовый класс моделей
 *
 *   @method array findAll() выборка всех объектов класса из БД
 *   @method object get() выборка объекта из БД (генератор)
 */
-
-namespace App\Model;
-
 abstract class Model
-{
+{    
     /**
     *   Выборка всех объектов из БД
     *

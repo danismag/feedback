@@ -1,40 +1,39 @@
 <?php
 
+namespace App\Model;
+
 /**
 *   Менеджер пользователей
 *
 */
-
-namespace App\Model;
-
-class User
+class User extends Model
 {
-    use App\Traits\Singleton;
-    
     const TABLE = 'users';
     
-    private $sid;                           // идентификатор текущей сессии
+    public $login;
+    public $sid;                           // идентификатор текущей сессии
+    public $is_admin;
     private $uid;                           // идентификатор текущего пользователя
     private $db;                            // подключенная БД
 
-    //
-    // Конструктор
-    //
-    private function __construct()
+    /**
+    *   Конструктор
+    */
+    /*private function __construct()
     {
 
         $this->sid = null;
         $this->uid = null;
         $this->db = MSQL::instance();
-    }
+    }*/
 
-    //
-    // Авторизация
-    // $login - логин
-    // $password - пароль
-    // $remember - нужно ли запоминать в куках
-    // Результат - true / false
-    //
+    /**
+    *   Авторизация
+    *   $login - логин
+    *   $password - пароль
+    *   $remember - нужно ли запоминать в куках
+    *   Результат - true / false
+    */
     public function login($login, $password, $remember = true)
     {
 
@@ -54,8 +53,7 @@ class User
         if ($remember) {
             $expire = time() + 3600*24*30;
             setcookie('login', $login, $expire);
-            setcookie('password', hash('ripemd128', 'qm&h*'.$pass.
-                'pg!@')), $expire);
+            setcookie('password', hash('ripemd128', 'qm&h*'.$pass.'pg!@'), $expire);
         }
 
         // открываем сессию и запоминаем SID
@@ -65,9 +63,9 @@ class User
         return true;
     }
 
-    //
-    // Выход
-    //
+    /**
+    *   Выход
+    */
     public function logout()
     {
 
@@ -80,11 +78,11 @@ class User
         $this->uid = null;
     }
 
-    //
-    // Получение пользователя
-    // $id_user - если не указан, берем текущего
-    // Результат - объект пользователя
-    //
+    /**
+    *   Получение пользователя
+    *   $id_user - если не указан, берем текущего
+    *   Результат - объект пользователя
+    */
     public function get($id_user = null)
     {
 
@@ -100,25 +98,25 @@ class User
         // А теперь просто возвращаем пользователя по id_user
         $query = "SELECT * FROM users WHERE id_user = $id_user";
 
-        return {$this->db->Select($query)}[0];
+        return $this->db->Select($query)[0];
     }
 
-    //
-    // Получаем пользователя по логину
-    //
+    /**
+    *   Получаем пользователя по логину
+    */
     public function getBylogin($login)
     {
 
         $query = 'SELECT * FROM users WHERE login = ' . htmlentities($login);
 
-        return {$this->db->Select($query)}[0];
+        return $this->db->Select($query)[0];
     }
 
-    //
-    // Проверка наличия привилегий
-    // $id-user - если не указан, значит, для текущего
-    // Результат - true / false
-    //
+    /**
+    *   Проверка наличия привилегий
+    *   $id-user - если не указан, значит, для текущего
+    *   Результат - true / false
+    */
     public function can($id_user = null)
     {
 
@@ -132,13 +130,13 @@ class User
 
         $query = "SELECT is_admin FROM users WHERE id_user = $id_user";
 
-        return {$this->db->Select($query)}['is_admin'];
+        return $this->db->Select($query)['is_admin'];
     }
 
-    //
-    // Получение id текущего пользователя
-    // Результат - UID
-    //
+    /**
+    *   Получение id текущего пользователя
+    *   Результат - UID
+    */
     public function getUid()
     {
 
@@ -164,10 +162,10 @@ class User
         return $this->uid;
     }
 
-    //
-    // Функция возвращает идентификатор текущей сессии
-    // Результат - SID
-    //
+    /**
+    *   Функция возвращает идентификатор текущей сессии
+    *   Результат - SID
+    */
     private function getSid()
     {
 
@@ -192,10 +190,11 @@ class User
 
         return $sid;
     }
-
-    // Открытие новой сессии
-    // Результат - SID
-    //
+    
+    /**
+    *   Открытие новой сессии
+    *   Результат - SID
+    */
     private function openSession($id_user)
     {
 
