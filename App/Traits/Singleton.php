@@ -2,13 +2,19 @@
 
 namespace App\Traits;
 
+/**
+*   Трейт Singleton
+*
+*/
 trait Singleton
 {
-    protected static $instance;
-
-    protected function __construct()
-    {}
-
+    private static $instance;
+   
+    /**
+    *   Возвращает экземпляр класса
+    *
+    *   @return object - экземпляр указанного класса
+    */
     public static function instance()
     {
         if (null === static::$instance){

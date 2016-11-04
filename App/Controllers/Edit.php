@@ -1,12 +1,11 @@
 <?php
 
+namespace App\Controllers;
+
 /**
 *   Контроллер страниц редактирования (админ)
 *
 */
-
-namespace App\Controller;
-
 class Edit extends Base
 {
        

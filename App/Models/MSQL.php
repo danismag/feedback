@@ -1,18 +1,14 @@
 <?php
+namespace App\Models;
 
 /**
 *   Класс для работы с БД
 */
-
-namespace App\Model;
-
 class MSQL
 {
-
-    use App\Traits\Singleton;           // паттерн "Singleton"
+    use \App\Traits\Singleton;           // паттерн "Singleton"
 
     private $dbh;                        // подключение к БД
-
 
     private function __construct()
     {
@@ -20,11 +16,11 @@ class MSQL
         setLocale(LC_ALL, 'ru_RU.UTF8');
 
         // Создание подключения к БД и настройка режима выборки и ошибок
-        $this->dbh = new PDO ('mysql:host=' . DB_SERVER . '; dbname=' . DB_BASE,
+        $this->dbh = new \PDO ('mysql:host=' . DB_SERVER . '; dbname=' . DB_BASE,
             DB_USER, DB_PASSWORD);
         $this->dbh->exec('SET NAMES UTF-8');
-        $this->dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_CLASS);
-        $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->dbh->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+        $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     /**
@@ -37,9 +33,13 @@ class MSQL
     public function select($sql, $class)
     {
 
-        $q = $this->dbh->query($sql);
+        $q = $this->dbh->prepare($sql);
+        
+        $q->setFetchMode(\PDO::FETCH_CLASS, $class);
+        
+        $q->execute();
 
-        return $q->fetchAll($class);
+        return $q->fetchAll();
     }
 
     /**
@@ -51,9 +51,13 @@ class MSQL
     */
     public function selectOne($sql, $class)
     {
-         $q = $this->dbh->query($sql);
+         $q = $this->dbh->prepare($sql);
+         
+         $q->setFetchMode(\PDO::FETCH_CLASS, $class);
+         
+         $q->execute();
 
-         yield $q->fetch($class);
+         return $q->fetch();
     }
 
 

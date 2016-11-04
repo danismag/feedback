@@ -1,13 +1,12 @@
 <?php
 
+namespace App\View;
+
 /**
 *   Класс для отображения страниц
 *   
-*   @property $data array Поле-массив для хранения данных
+*   @property array $data - массив для хранения данных
 */
-
-namespace App\View;
-
 class View
 {   
     // поле для хранения переданных данных

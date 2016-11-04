@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 /**
 *   Менеджер пользователей
@@ -13,19 +13,19 @@ class User extends Model
     public $login;
     public $sid;                           // идентификатор текущей сессии
     public $is_admin;
-    private $uid;                           // идентификатор текущего пользователя
-    private $db;                            // подключенная БД
+    //private $uid;                           // идентификатор текущего пользователя
+    //private $db;                            // подключенная БД
 
     /**
     *   Конструктор
     */
-    /*private function __construct()
+    public function __construct()
     {
 
-        $this->sid = null;
+       /* $this->sid = null;
         $this->uid = null;
-        $this->db = MSQL::instance();
-    }*/
+        $this->db = MSQL::instance();*/
+    }
 
     /**
     *   Авторизация

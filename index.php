@@ -3,9 +3,12 @@
 include_once(__DIR__ . '/config.php');
 include_once(__DIR__ . '/autoload.php');
 
-$user = new App\Models\User;
-$user = App\Models\User::get();
+//$user = new App\Models\User;
+$user = App\Models\User::find();
+$user->danis = 'Magadeev';
 var_dump($user);
+
+
 
 
 /*$formSend = false;

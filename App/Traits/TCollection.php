@@ -1,12 +1,11 @@
 <?php
 
+namespace App\Traits;
+
 /**
 *   трейт реализации интерфейсов ArrayAccess и Iterator
 *
 */
-
-namespace App\Traits;
-
 trait TCollection
 {
     protected  data = [];

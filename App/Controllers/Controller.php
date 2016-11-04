@@ -1,11 +1,11 @@
 <?php
+
+namespace App\Controllers;
+
 /**
 *   Базовый класс контроллера
 *
 */
-
-namespace App\Controller;
-
 abstract class Controller
 {
 

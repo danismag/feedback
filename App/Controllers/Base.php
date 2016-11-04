@@ -1,11 +1,11 @@
 <?php
+
+namespace App\Controllers;
+
 /**
 *   Контроллер сайта
 *
 */
-
-namespace App\Controller;
-
 abstract class Base extends Controller
 {
     protected $title;               // заголовок страницы
@@ -27,6 +27,27 @@ abstract class Base extends Controller
         $this->need_login = $need_login;
         $this->user = App\Model\User::instance()->get();       
     }
+    
+    /**
+    *   логин пользователя
+    *
+    *
+    */
+    public static function login()
+    {
+            // TODO
+    }
+    
+    /**
+    *   выход пользователя
+    *
+    *
+    */
+    public static function logout()
+    {
+            // TODO
+    }
+    
     
     /**
     *   Действия до вызова основного метода

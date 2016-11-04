@@ -1,10 +1,10 @@
 <?php
+
+namespace App\Models;
+
 /**
 *   Класс загрузки и обработки изображений
 */
-
-namespace App\Model;
-
 class Image
 {
     const WIDTH = 320;          // требуемые максимальные размеры

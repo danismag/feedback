@@ -1,11 +1,10 @@
 <?php
 
+namespace App\Models;
+
 /**
 *   Класс для работы с отзывами
 */
-
-namespace App\Model;
-
 class Comment extends Model
 {
     const TABLE = 'comments';

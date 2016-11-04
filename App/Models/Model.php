@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Models;
 
 /**
 *   Базовый класс моделей
@@ -10,6 +10,8 @@ namespace App\Model;
 */
 abstract class Model
 {    
+    const TABLE = '';
+    
     /**
     *   Выборка всех объектов из БД
     *
@@ -29,13 +31,13 @@ abstract class Model
     *
     *   @return object - объект класса
     */
-    public static function get()
+    public static function find()
     {
         $db = MSQL::instance();
 
-        return $db->selectOne(
+        return ($db->selectOne(
             'SELECT * FROM '. static::TABLE,
-            static::class);
+            static::class));
     }
 }
 

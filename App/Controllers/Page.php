@@ -1,11 +1,11 @@
 <?php
+
+namespace App\Controllers;
+
 /**
 *   Контроллер страниц просмотра
 *
 */
-
-namespace App\Controller;
-
 class Page extends Base
 {
     /**
