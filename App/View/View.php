@@ -12,10 +12,14 @@ class View
     // поле для хранения переданных данных
     protected $data = [];
     
-    // Обработка присваивания значения к несуществующему свойству
-    public function __set ($key, $value)
+    // Обработка присваивания значения несуществующему свойству
+    public function __set ($k, $object)
     {
-        $this->data[$key] = $value;
+        foreach($object as $key => $value) {
+            
+            $this->data[$key] = $value;
+        }
+                
     }
     
     // Обработка запроса на чтение недоступного свойства
@@ -42,7 +46,7 @@ class View
         // Установка переменных для шаблона
         foreach ($this->data as $key => $value) {
             
-            $$key = $value; 
+            $$key = $value;
         }
         
         include $template;

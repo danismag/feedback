@@ -53,13 +53,43 @@ class MSQL
     {
          $q = $this->dbh->prepare($sql);
          
-         $q->setFetchMode(\PDO::FETCH_CLASS, $class);
-         
          $q->execute();
 
-         return $q->fetch();
+         return $q->fetchObject($class);
     }
+    
+    /**
+    *   Выборка объекта по запросу
+    *
+    *   @param string $table - имя таблицы
+    *   @param object $object - переданный объект/массив
+    *   @param string $class - имя класса
+    *   @return object - объект указанного класса
+    */
+    public function selectWhere($table, $object, $class)
+    {
+        $wheres = [];
+        $values = [];
 
+        foreach ($object as $key => $value) {
+            
+            $wheres[] = "$key = :$key";
+            $values[$key] = $value;
+
+            if ($value === null) {
+                $values[$key] = 'NULL';
+            }
+        }
+
+        $wheres_s = implode(' AND ', $wheres);
+        $sql = "SELECT * FROM $table WHERE $wheres_s ";
+        
+        $q = $this->dbh->prepare($sql);
+         
+        $q->execute($values);
+        
+        return $q->fetchObject($class);        
+    }
 
     /**
     *   Вставка строки
@@ -75,13 +105,13 @@ class MSQL
         $values = [];
 
         foreach ($object as $key => $value) {
-
+            // предотвращение вставки поля id
             if (substr_count($value, 'id', 0, 2)) {
                 continue;
             }
             $colomns[] = $key;
             $masks[] = ":$key";
-            $values[] = $value;
+            $values[$key] = $value;
 
             if ($value === null) {
                 $values[$key] = 'NULL';
@@ -104,7 +134,7 @@ class MSQL
     *   @param string $table - имя таблицы
     *   @param object $object - переданный объект
     *   @param string $where - условие (подстрока запроса)
-    *   @return dec - число измененных строк
+    *   @return int - число измененных строк
     */
     public function update($table, $object, $where)
     {
@@ -115,7 +145,7 @@ class MSQL
         foreach ($object as $key => $value) {
 
             $sets[] = "$key = :$key";
-            $values[] = $value;
+            $values[$key] = $value;
 
             if ($value === null) {
                 $values[$key] = 'NULL';
@@ -123,9 +153,9 @@ class MSQL
         }
 
         $sets_s = implode(', ', $sets);
-        $query = "UPDATE $table SET $sets_s WHERE $where";
+        $sql = "UPDATE $table SET $sets_s WHERE $where";
 
-        $q = $this->dbh->prepare($query);
+        $q = $this->dbh->prepare($sql);
         $q->execute($values);
 
         return $q->rowCount();

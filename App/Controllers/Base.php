@@ -29,13 +29,20 @@ abstract class Base extends Controller
     }
     
     /**
-    *   логин пользователя
+    *   Авторизация пользователя
     *
-    *
+    *   @param string $_POST['login']
+    *   @param string $_POST['password']
+    *   @param bool $_POST['remember']
     */
-    public static function login()
+    public function login()
     {
-            // TODO
+        $user = \App\Model\User::getUser($_POST['login'], $_POST['password']);
+        $session = \App\Etc\Auth::openSession($user, $_POST['remember']);
+        
+        // TODO
+            
+        
     }
     
     /**
@@ -43,9 +50,11 @@ abstract class Base extends Controller
     *
     *
     */
-    public static function logout()
+    public function logout()
     {
-            // TODO
+        // TODO
+        
+        
     }
     
     

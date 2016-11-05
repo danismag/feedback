@@ -9,9 +9,7 @@ namespace App\Models;
 *   @method object get() выборка объекта из БД (генератор)
 */
 abstract class Model
-{    
-    const TABLE = '';
-    
+{        
     /**
     *   Выборка всех объектов из БД
     *
@@ -35,9 +33,25 @@ abstract class Model
     {
         $db = MSQL::instance();
 
-        return ($db->selectOne(
+        return $db->selectOne(
             'SELECT * FROM '. static::TABLE,
-            static::class));
+            static::class);
+    }
+    
+    /**
+    *   Выборка объекта по запросу
+    *
+    *   @param array $where - массив запроса 'имя' - 'значение'
+    *   @return object - объект класса
+    */
+    public static function findWhere($where)
+    {
+        $db = MSQL::instance();
+        
+        return $db->selectWhere(
+            static::TABLE,
+            $where,
+            static::class);        
     }
 }
 

@@ -4,11 +4,22 @@ include_once(__DIR__ . '/config.php');
 include_once(__DIR__ . '/autoload.php');
 
 //$user = new App\Models\User;
+
+$view = new App\View\View;
+var_dump($view);
+echo '<br>';
 $user = App\Models\User::find();
-$user->danis = 'Magadeev';
 var_dump($user);
+echo '<br>';
+/*
+echo '<br>';
+$view->user = $user;
+var_dump($view);
+echo '<br>';*/
 
-
+$a = [1, 2, 3, 4];
+$b = implode(' AND ', $a);
+echo $b;
 
 
 /*$formSend = false;
