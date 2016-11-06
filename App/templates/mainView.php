@@ -1,4 +1,3 @@
-<?php if (!$title): ?>
 <!--
     Шаблон главной страницы
 
@@ -12,7 +11,6 @@
     ('date', 'name', 'email' или 'no' - не отображать сортировку)
 
 -->
-<?php endif; ?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -27,7 +25,7 @@
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/index.php"></a>
+                <a class="navbar-brand" href="/">Главная</a>
             </div>
 
            <!--  Вкладки для сортировки -->

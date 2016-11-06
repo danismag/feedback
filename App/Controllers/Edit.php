@@ -20,6 +20,26 @@ class Edit extends Base
         $this->user = App\Model\User::instance()->get();
     }
     
+    // отображает страницу для админа
+    protected function actionIndex()
+    {
+        //TODO
+        
+    }
+    
+    // Проводит одобрение отзыва
+    protected function actionApprove()
+    {
+        // TODO
+    }
+    
+    // Редактирование отзыва
+    protected function actionComment($id)
+    {
+        //TODO
+    }
+    
+    
 }
 
 

@@ -8,10 +8,8 @@ namespace App\Controllers;
 */
 abstract class Base extends Controller
 {
-    protected $title;               // заголовок страницы
     protected $view;                // экземпляр класса для отображения
     protected $need_login;          // требуется ли авторизация для этой страницы
-    protected $user;                // авторизованный пользователь или null
     
 
     /**
@@ -20,12 +18,10 @@ abstract class Base extends Controller
     *   @param $title string    Заголовок страницы
     *   @param $need_login = false bool     Требуется ли авторизация для просмотра
     */
-    public function __construct($title, $need_login = false)
-    {
-        $this->title = $title;
-        $this->view = new App\View\View; 
-        $this->need_login = $need_login;
-        $this->user = App\Model\User::instance()->get();       
+    public function __construct($need_login = false)
+    {        
+        $this->view = new \App\View\View; 
+        $this->need_login = $need_login;   
     }
     
     /**
@@ -34,27 +30,21 @@ abstract class Base extends Controller
     *   @param string $_POST['login']
     *   @param string $_POST['password']
     *   @param bool $_POST['remember']
+    *   @return bool - флаг состояния авторизации
     */
-    public function login()
+    protected function login()
     {
         $user = \App\Model\User::getUser($_POST['login'], $_POST['password']);
-        $session = \App\Etc\Auth::openSession($user, $_POST['remember']);
-        
-        // TODO
-            
-        
+        return \App\Etc\Auth::openSession($user, $_POST['remember']);
+        $this->redirect('/edit/index/');
     }
     
     /**
-    *   выход пользователя
-    *
-    *
+    *   выход пользователя    
     */
-    public function logout()
+    protected function logout()
     {
-        // TODO
-        
-        
+        \App\Etc\Auth::closeSession();   
     }
     
     

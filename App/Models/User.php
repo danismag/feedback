@@ -22,7 +22,7 @@ class User extends Model
     public $id_user;
     
     /**
-    *   Поиск пользователя в БД
+    *   Поиск пользователя по логину и паролю в БД
     *
     *   @param string $login - логин
     *   @param string $password - пароль
@@ -36,12 +36,41 @@ class User extends Model
         
         if ($login == '' || $password == '') {
             
+            throw new \Exception('Неверная пара логин-пароль');            
             return null;            
         }
         
         // ищем пользователя в БД
         $password = hash('ripemd128', 'qm&h*' . $password . 'pg!@');
         $user = User::findWhere(['login' => $login, 'password' => $password]);
+
+        if ($user == null) {
+            
+            throw new \Exception('Неверная пара логин-пароль');            
+            return null;
+        }
+                
+        return $user;               
+    }
+    
+    /**
+    *   Поиск пользователя по логину в БД
+    *
+    *   @param string $login - логин
+    *   @return User - объект пользователя или null
+    */
+    public static function getUserByLogin($login)
+    {
+        // санитация данных
+        $login = filter_var(trim($login), FILTER_SANITIZE_STRING);
+        
+        if ($login == '') {
+            
+            return null;            
+        }
+        
+        // ищем пользователя в БД
+        $user = User::findWhere(['login' => $login]);
 
         if ($user == null) {
             

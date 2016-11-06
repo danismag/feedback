@@ -62,7 +62,7 @@ class MSQL
     *   Выборка объекта по запросу
     *
     *   @param string $table - имя таблицы
-    *   @param object $object - переданный объект/массив
+    *   @param object $object - переданный запрос в виде объекта/массива
     *   @param string $class - имя класса
     *   @return object - объект указанного класса
     */
@@ -133,13 +133,14 @@ class MSQL
     *
     *   @param string $table - имя таблицы
     *   @param object $object - переданный объект
-    *   @param string $where - условие (подстрока запроса)
+    *   @param object $where - условие в виде объекта/массива 'поле' - 'значение'
     *   @return int - число измененных строк
     */
     public function update($table, $object, $where)
     {
 
         $sets = [];
+        $wheres = [];
         $values = [];
 
         foreach ($object as $key => $value) {
@@ -151,9 +152,21 @@ class MSQL
                 $values[$key] = 'NULL';
             }
         }
+        
+        foreach ($where as $wkey => $wvalue) {
+            
+            $wheres[] = "$wkey = :$wkey";
+            $values[$wkey] = $wvalue;
 
+            if ($wvalue === null) {
+                $values[$wkey] = 'NULL';
+            }
+        }
+        
         $sets_s = implode(', ', $sets);
-        $sql = "UPDATE $table SET $sets_s WHERE $where";
+        $wheres_s = implode(' AND ', $wheres);       
+        
+        $sql = "UPDATE $table SET $sets_s WHERE $wheres_s";
 
         $q = $this->dbh->prepare($sql);
         $q->execute($values);
@@ -165,15 +178,30 @@ class MSQL
     *   Удаление строк
     *
     *   @param string $table - имя таблицы
-    *   @param string $where - условие (подстрока запроса)
-    *   @return numeric - число удаленных строк
+    *   @param object $where - условие в виде массива/объекта
+    *   @return int - число удаленных строк
     */
     public function delete($table, $where)
     {
+        $wheres = [];
+        $values = [];
 
-        $query = "DELETE FROM $table WHERE $where";
+        foreach ($where as $key => $value) {
+            
+            $wheres[] = "$key = :$key";
+            $values[$key] = $value;
 
-        $q = $this->dbh->query($query);
+            if ($value === null) {
+                $values[$key] = 'NULL';
+            }
+        }
+
+        $wheres_s = implode(' AND ', $wheres);
+        
+        $sql = "DELETE FROM $table WHERE $wheres_s";
+
+        $q = $this->dbh->prepare($sql);
+        $q->execute($values);
 
         return $q->rowCount();
     }

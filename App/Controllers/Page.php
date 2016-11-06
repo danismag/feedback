@@ -24,63 +24,51 @@ class Page extends Base
         parent::before();
     }
 
-      
+    //
     // вывод главной страницы просмотра
-    protected function actionIndex()
+    // - сортировка отзывов
+    // - ловля исключений
+    // - вывод сообщений о состоянии
+    protected function actionIndex($sort = 'sortbydate')
     {
-
-        // сообщения об ошибках отправки данных
-        $err_login = '';
-        $err_name = '';
-        $err_email = '';
-        $err_text = '';
-
+        $errors = [];       // массив сообщений об ошибках
+        
         // если были отправлены данные
         if ($this->isPost()) {
-            // была ли попытка входа админа
-            if (isset($_POST['login']) && isset($_POST['password']) 
-                && isset($_POST['remember'])) {
-                // проводим попытку входа
-                if (App\Model\User::instance()->login($_POST['login'], $_POST['password'],
-                    $_POST['remember'])) {
-
-                    $this->redirect('/edit');
-                }
-
-                //сообщение об ошибке входа
-                $err_login = 'Неверная пара логин-пароль';
+            
+            try {
+                
+                $this->login();
+                
+            } catch(\Exception $e) {
+                
+                $errors[] = $e->getMessage();
             }
-
-            // произошла ли отправка формы обратной связи
-            if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['text'])) {
-
-            }
-
-        }   
-
-        $this -> title .= 'Просмотр оставленных отзывов';
-
-        // Если сортировка не задана, берем по дате
-        $sortby = isset($this->params[1]) ? $this->params[1] : 'sortbydate';
-
-        // получаем комментарии из базы
-        $mComments = M_Comments::Instance();
-        $commentsArr = $mComments->Get($sortby);
-
+            
+        } 
+        
+        $comments = '';      // html-код отзывов
+        
         // подготовка каждого отзыва к отображению
-        $commentsView;          // html-код комментариев
-        foreach ($commentsArr as $com) {
-            $commentsView .= $this-> Template('view/v_comment.php', $com);
-            $commentsView .= '<br>';
-        }
-
-        // отрисовка шаблона
-        $this -> content = $this -> Template('view/v_index.php', array('comments' =>
-            $commentsView, 'sortby' => $sortby, 'can_edit' => M_Users::Instance()->Can()));
-
+        while ($comment = \App\Models\Comment::getComment($sort)) {
+            
+            $view = new \App\View\View;
+            $view->comment = $comment;
+            $comments .= $view->render(__DIR__ . '/App/templates/commentView.php');
+        }         
+        
+        // отрисовка главной страницы
+        $this->view->page = [
+            'title' => 'Просмотр оставленных отзывов',
+            'is_admin' => '0',
+            'form_send' => '0',
+            'comments' => $comments,
+            'sortby' => $sort];
+        echo $this->view->render(__DIR__ . '/App/templates/mainView.php');
+        echo 'Контроллер страницы Просмотра!<br>';
     }
 
-    protected function actionEdit()
+    protected function actionPreview()
     {
         if (!M_Users::Instance()->Can()) {
             $this->redirect('/index');
@@ -96,8 +84,13 @@ class Page extends Base
             }   
 
             $text= $mPages->text_get($id);
-            $this->content = $this->Template('view/v_edit.php', array('text' => $text))
+            $this->content = $this->Template('view/v_edit.php', array('text' => $text));
 
+    }
+    
+    protected function actionForm()
+    {
+            //TODO
     }
 
 }

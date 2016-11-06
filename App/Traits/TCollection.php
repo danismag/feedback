@@ -8,7 +8,7 @@ namespace App\Traits;
 */
 trait TCollection
 {
-    protected  data = [];
+    protected  $data = [];
     
     // Реализация интерфеса ArrayAccess
     public function offsetExists($offset)

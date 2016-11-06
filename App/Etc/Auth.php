@@ -10,9 +10,7 @@ namespace App\Etc;
 */
 class Auth 
 {
-    public static $user;
-    public static $sid;
-    
+        
     /**
     *   Открытие сессии
     *
@@ -24,8 +22,7 @@ class Auth
     {        
         if ($user) {
             // Регистрируем сессию
-            $_SESSION['sid'] = self::$sid = $user->sid;
-            self::$user = $user;
+            $_SESSION['sid'] = $user->sid;
             
             // запоминаем имя и пароль
             if ($remember) {
@@ -47,26 +44,28 @@ class Auth
     */
      public static function isLogin()
     {
-        // Проверка кеша
-        if ($this->sid != null) { return $this->sid;    }
-
         // Ищем SID в сессии
-        $sid = $_SESSION['sid'];
-
+        if (isset($_SESSION['sid'])) { 
+            
+            return true;
+        }
+        
         // Если нет сессии, ищем логин и пароль в куках
         // и пробуем переподключиться
-        if ($sid == null && isset($_COOKIE['login'])) {
-            $user = $this->GetBylogin($_COOKIE['login']);
+        if (isset($_COOKIE['password']) && isset($_COOKIE['login'])) {
+            
+            $user = \App\Model\User::getUserByLogin($_COOKIE['login']);
+            
+            if ($user) {
+                
+                if ($_COOKIE['password'] == $user->password) {
+                    
+                    return self::openSession($user, true);                    
+                }
+            }
         }
 
-        if ($user != null && $user['password'] == $_COOKIE['password']) {
-            $sid = $this->OpenSession($user['id_user']);
-        }
-
-        // запоминаем в кэш
-        if ($sid != null) $this->sid = $sid;
-
-        return $sid;
+        return false;
     }
     
     /**
@@ -79,8 +78,6 @@ class Auth
         unset($_COOKIE['login']);
         unset($_COOKIE['password']);
         unset($_SESSION['sid']);
-        self::$sid = null;
-        self::$user = null;
     }
 }
 

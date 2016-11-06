@@ -17,13 +17,13 @@ abstract class Controller
     *   
     *   @param $action string вторая часть имени вызываемого метода
     */
-    public function action($action)        
+    public function action($action, $id = null)        
     {
         $MethodName = 'action' . $action;
         
         $this->before();
         
-        return $this->$MethodName();        
+        return $this->$MethodName($id);      
     }
     
     /**
@@ -43,7 +43,7 @@ abstract class Controller
     */
     protected function isGet()
     {
-        return $_SERVER['REQUEST_METHOD'] == 'GET';
+        return ($_SERVER['REQUEST_METHOD'] == 'GET');
     }
 
     /**
@@ -53,7 +53,7 @@ abstract class Controller
     */
     protected function isPost()
     {
-        return $_SERVER['REQUEST_METHOD'] == 'POST';
+        return ($_SERVER['REQUEST_METHOD'] == 'POST');
     }
         
     /**

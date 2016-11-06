@@ -8,9 +8,9 @@
 namespace App\Exceptions;
 
 class Multiexception extends \Exception
-    implements ArrayAccess, Iterator
+    implements \ArrayAccess, \Iterator
 {
-    use App\Traits\TCollection;
+    use \App\Traits\TCollection;
     
 }
 

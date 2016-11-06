@@ -3,57 +3,48 @@
 include_once(__DIR__ . '/config.php');
 include_once(__DIR__ . '/autoload.php');
 
-//$user = new App\Models\User;
+session_start();
 
-$view = new App\View\View;
-var_dump($view);
-echo '<br>';
-$user = App\Models\User::find();
-var_dump($user);
-echo '<br>';
-/*
-echo '<br>';
-$view->user = $user;
-var_dump($view);
-echo '<br>';*/
+    // Обработка GET-запроса и вызов соответствующего контроллера
+    $info = explode('/', $_SERVER['REQUEST_URI']);
+    $params = [];
 
-$a = [1, 2, 3, 4];
-$b = implode(' AND ', $a);
-echo $b;
-
-
-/*$formSend = false;
-$post = null;
-
-if (isset($_POST)) {
-    $formSend = true;
-    $post = $_POST;
-    $image = $_FILES;
-}
-
-include_once(__DIR__ . '/App/templates/mainView.php')
-
-//$page = new App\Model\Comment;
-//var_dump($page);
-
-/*session_start();
-
-// Обработка GET-запроса и вызов соответствующего контроллера
-$info = explode('/', $_SERVER['REQUEST_URI']);
-$params = [];
-
-foreach ($info as $v)
-{
-    if ($v != '')
-        $params[] = $v;
-}
-
-    $action = 'action_';
-    $action .= (isset($params[0])) ? $params[0] : 'index';
-
-
-    $controller = new C_Page();
-    $controller -> Request($action, $params);
-    */
+    foreach ($info as $v) {
+        
+        if ($v != '') {
+            
+            $params[] = $v;
+        }
+    }
+        
+    switch ($params[0] ?? 'page') {
+        
+        case 'page':
+            $controller = new App\Controllers\Page;
+            break;
+        case 'edit':
+            $controller = new App\Controllers\Edit;
+            break;
+        default:
+            $controller = new App\Controllers\Page;
+            break;        
+    }
+    
+    /*
+    $action = 'action' . ucfirst($params[1] ?? 'index');
+    
+    $id = ($params[2] ?? null);
+    
+    $controller->action($action, $id);*/
+    
+    $view = new \App\View\View;
+    $view->page = [
+            'title' => 'Просмотр оставленных отзывов',
+            'is_admin' => '0',
+            'form_send' => '0',
+            'comments' => '',
+            'sortby' => ''];
+        echo $view->render(__DIR__ . '/App/templates/mainView.php');
+     
 
 ?>

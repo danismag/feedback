@@ -18,202 +18,185 @@ class Comment extends Model
     public $edit_time;                  // дата/время редактирования отзыва
     public $edited;                     // был ли отзыв отредактирован
     public $approved;                   // был ли отзыв одобрен
-
+    protected $db;                      // подключение к БД
 
     /**
     *   Конструктор
     */
     public function __construct()
     {
-
-        $this->edit_time = null;
-        $this->com_text = null;
-        $this->email = null;
-        self::db = MSQL::instance();
+        $this->db = MSQL::instance();
     }
-
+    
     /**
-    *   Валидация комментария
-    *   Результат - массив наличия ошибок $error
-    *   $error['exist'] - true (1) / false (0) - есть ли вообще ошибки
-    *   $error['name', 'email', 'text'] - есть ли ошибки в имени, email, тексте
+    *   Валидация и создание объекта отзыва
+    *
+    *   @param string $name - имя пользователя
+    *   @param string $email - email пользователя
+    *   @param string $text - текст комментария
+    *   @return Comment - объект отзыва или null
     */
-    public function validat($name, $email, $text)
+    public static function validate($name, $email, $text)
     {
-
-        // массив для записи ошибок
-        $error = array();
+        // мультиисключение для сообщений об ошибках
+        $err = new \App\Exceptions\Multiexception;
 
         // Обрезка и фильтрация текста
-        $this->username = filter_var(trim($name), FILTER_SANITIZE_STRING);
-        $this->email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
-        $this->com_text = filter_var(trim($text), FILTER_SANITIZE_STRING);
+        $name = filter_var(trim($name), FILTER_SANITIZE_STRING);
+        $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+        $text = filter_var(trim($text), FILTER_SANITIZE_STRING);
 
         // проверка на заполнение
-        if ($this->username == '') $error['name'] = 1;
-        if ($this->email == '') $error['email'] = 1;
-        if ($this->com_text == '') $error['text'] = 1;
-
-        // Проверка e-mail
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) $error['email'] = 1;
-
-        // подсчет ошибок
-        if (count($error) == 0) {
-        $error['exist'] = 0;
-        }   else {
-                $error['exist'] = 1;
-            }
-
-        return $error;
-    }
-
-    /**
-    *   Предпросмотр комментария
-    *   Результат - массив "поле - значение" либо null
-    */
-    public function preview($name, $email, $text)
-    {
-
-        // Проверка валидности отзыва
-        $error = $this->validat($name, $email, $text);
-
-        // Если ошибок нет
-        if ($error['exist'] == 0) {
-            // массив отзыва для предпросмотра
-            $comment['name'] = $this->username;
-            $comment['email'] = $this->email;
-            $comment['text'] = $this->com_text;
-
-            return $comment;
+        if ($name == '') {
+            
+            $err[] = new \Exception('Введите имя пользователя');
+        }
+        
+        if ($email == '') {
+            
+            $err[] = new \Exception('Введите e-mail');
+        }
+        
+        if ($text == '') {
+            
+            $err[] = new \Exception('Введите текс отзыва');
         }
 
-        return null;
-    }
+        // Валидация e-mail
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            
+            $err[] = new \Exception('Введенный e-mail не соотвествует стандартам');
+        }
 
+        // подсчет исключений
+        if (!empty($err)) {
+            
+            throw $err;
+            return null;            
+        }
+
+        $comment = new Comment;
+        $comment->username = $name;
+        $comment->email = $email;
+        $comment->text = $text;
+        
+        return $comment;        
+    }
+    
     /**
-    *   Внесение комментария в базу данных
-    *   результат - true / false
+    *   Выборка отзывов, отсортированных по: дате (по умолч.), имени, email
+    *   
+    *   @param string $sort - параметр сортировки 'sortbydate', 'sortbyname' , 'sortbyemail'
+    *   @param bool $not_approved - выводить ли неодобренные отзывы
+    *   @return Comment - объект отзыва один за другим
     */
-    public function setCom($name, $email, $text, $image = null)
+    public static function getComment($sort, $not_approved = false)
     {
 
-        // Проверка валидности отзыва
-        $error = $this->validat($name, $email, $text);
+        // Выводить ли неодобренные отзывы
+        $where = ($not_approved ? 'WHERE approved = 1' : '');
 
-        // если ошибок нет
-        if ($error['exist'] == 0) {
-            // Формирование массива для вставки
-            $object['username'] = $this->username;
-            $object['email'] = $this->email;
-            $object['text'] = $this->com_text;
+        // анализ параметра сортировки
+        switch ($sort) {
 
-            if ($image != null) {
-                $object['image'] = $image;
-            }
+            case 'sortbydate':
+                $order = 'create_time DESC';
+                break;
+            case 'sortbyname': 
+                $order = 'username';
+                break;
+            case 'sortbyemail': 
+                $order = 'email';
+                break;
+            default:
+                $order = 'create_time DESC';
+                break;                    
+        }
+            
+        // формирование запроса к БД
+        $sql = "SELECT * FROM comments $where ORDER BY $order";
+            
+        $db = MSQL::instance();
+            
+        return $db->selectOne($sql, self::class);
+    }
+    
+    /**
+    *   Выборка отзыва из БД по id
+    *   
+    *   @param int $id - id отзыва в БД
+    *   @return Comment - объект отзыва
+    */
+    public function getCommentById($id)
+    {
 
-            $this->db->Insert('comments', $object);
+        return self::findWhere(['id_comment' => $id]);
+    }
+    
+    /**
+    *   Сохранение отзыва в БД
+    *
+    *   @param string $image - путь к файлу с изображением
+    *   @return bool - сохранен ли отзыв в БД
+    */
+    public function create($image = null)
+    {
 
+        if ($image != null) {
+            
+            $this->image = $image;
+        }
+
+        if ($this->db->insert(self::TABLE, self)) {
+                
+            throw new \Exception('Отзыв успешно сохранен');
+                
             return true;
         }
-
-        // Валидация не пройдена, запись не произошла
+               
+        // запись не произошла        
         return false;
     }
 
     /**
-    *   Отображение отзыва по id
-    *   Результат -  ассоциативный массив "поле - значение"
-    */
-    public function getById($id_com)
-    {
-
-        // Формирование запроса к БД
-        $query = 'SELECT * FROM '. self::TABLE. ' WHERE id_comment = '. $id_com;
-
-        return $this->db->Select($query);
-    }
-
-    /**
     *   Сохранение отредактированного комментария
-    *   Результат - число записанных строк (1) либо null
+    *   
+    *   @param int - число записанных строк (1) либо null
     */
-    public function save($name, $email, $text, $id_com)
+    public function save()
     {
 
-        // Проверка валидности
-        $error = $this->validat($name, $email, $text);
+        return $this->db->update(
+            self::TABLE, 
+            self, 
+            ['id_comment' => $this->id_comment]);        
 
-        // если ошибок нет
-        if ($error['exist'] == 0) {
-            // формирование массива для БД
-            $object['username'] = $name;
-            $object['email'] = $email;
-            $object['text'] = $text;
-
-            $where = "id_comment = $id_com";
-
-            // запись в БД
-            return $this->db->Update('comments', $object, $where);
-        }
-
-        return null;
     }
 
     /**
-    *   Изменение статуса комментария администратором
-    *   Результат - число строк (1) либо null
+    *   Одобрение комментария
+    *   
+    *   @return int - число строк (1)
     */
-    public function approve($id_com)
+    public function approve()
     {
+        $this->approved = 1;
 
-        // формирование запроса к БД
-        $object['approved'] = 1;
-        $where = "id_comment = $id_com";
-
-        return $this->db->Update('comments', $object, $where);
+        return $this->save();
     }
 
     /**
     *   Удаление комментария из базы данных
-    *   Результат - 1 либо null
+    *   
+    *   @return int - число удаленных строк (1)
     */
-    public function delete($id_com)
+    public function delete()
     {
-
-        $where = "id_comment = $id_com";
-
-        return $this->db->Delete('comments', $where);
+        return $this->db->delete(
+            self::TABLE,
+            ['id_comment' => $this->id_comment]);
     }
-
-    /*
-    *   Вывести комментарии по: дате (по умолч.), имени, email
-    *   $sort - строковый параметр сортировки 'date', 'name' , 'email'
-    *   $notapproved - 1 или 0 - выводить ли неодобренные отзывы
-    *   Результат - двумерный ассоциативный массив с полями отзывов
-    */
-    public function get($sort, $notApproved = 0)
-    {
-
-            // Выводить ли неодобренные отзывы
-            $notApproved == 0 ? $where = 'WHERE approved = 1' : $where = '';
-
-            // анализ параметра сортировки
-            switch ($sort) {
-
-                case 'sortbydate': 	$order = 'create_time DESC';
-                    break;
-                case 'sortbyname':	$order = 'username';
-                    break;
-                case 'sortbyemail':	$order = 'email';
-                    break;
-                default: 	$order = 'create_time DESC';
-            }
-            // формирование запроса к БД
-            $query = "SELECT * FROM comments $where ORDER BY $order";
-
-            return $this->db->Select($query);
-    }
-
+     
 }
 
 ?>
