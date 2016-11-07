@@ -26,9 +26,8 @@ $image -        путь к изображению (если есть)
             <div class="col-md-6">
 
     <!-- Отображение картинки, прикрепленной к отзыву -->
-    <span><img class="img-rounded img-responsive center-block" src="
-        <?= $image ?>
-    ">&nbsp;</span>
+    <span><img class="img-rounded img-responsive center-block" src="<?= $image ?>">
+        &nbsp;</span>
             </div>
 <?php endif; ?>
 

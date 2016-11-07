@@ -1,10 +1,10 @@
-<?php if (!$comment_id): ?>
+<?php if (!$id_comment): ?>
 <!--
     Форма для редактирования отзыва
 
     Должны быть переданы следующий данные:
 
-    $comment_id -   id отзыва из БД
+    $id_comment -   id отзыва из БД
     $username -     имя пользователя, оставившего отзыв
     $email -        email пользователя
     $text -         текст отзыва
@@ -35,7 +35,7 @@
     </textarea>
         </div>
         <div class="form-group col-md-6 col-md-offset-6">
-    <button type="submit" class="btn btn-primary" name="comment_id" value="<?= $comment_id; ?>">Отправить</button>
+    <button type="submit" class="btn btn-primary" name="id_comment" value="<?= $id_comment; ?>">Отправить</button>
         </div>
     </fieldset></form>
     </div>

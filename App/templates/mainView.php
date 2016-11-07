@@ -1,16 +1,20 @@
+<?php if(!$title): ?>
 <!--
     Шаблон главной страницы
 
     Должны быть переданы следующие данные:
 
     $title -        заголовок страницы
-    $is_admin -     является ли текущий пользователь админом (true/false)
-    $form_send -    отправлена ли форма с отзывом (true/false)
+    $loginForm -    html-код формы входа или текст приветствия админа
+    $feedForm -     html-код с формой отправки отзыва
     $comments -     html-код с отзывами или формой редактирования отзыва
+    $message -      html-код для сообщений о статусе действий
+    $errorLogin     html-код сообщения о неудаче авторизации
     $sortby -       строка с указанием типа сортировки отзывов
     ('date', 'name', 'email' или 'no' - не отображать сортировку)
 
 -->
+<?php endif; ?>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -26,6 +30,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">Главная</a>
+                <a class="navbar-brand" href=#feedbackform>К форме обратной связи</a>
             </div>
 
            <!--  Вкладки для сортировки -->
@@ -60,53 +65,18 @@ switch($sortby) {
         </div>
 
         <!-- Форма Входа -->
-<?php if (!$is_admin): ?>
-
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-            <label class="sr-only" for="loginfield">Логин</label>
-            <input type="text" class="form-control" id="loginfield" placeholder="Логин" name="login">
-                </div>
-                <div class="form-group">
-            <label class="sr-only" for="passwordfield">Пароль</label>
-            <input type="password" class="form-control" id="passwordfield" placeholder="Пароль" name="password">
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" name="remember"> Запомнить меня
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-default">Войти</button>
-            </form>
-
-<?php else : ?>
-
-<p class="navbar-text">Добро пожаловать, Админ!</p>
-
-<?php endif; ?>
-
+<?= $loginForm; ?>
+ 
         </div>
     </nav>
+    
+    <!-- Контейнер для сообщений о неудачной аутентификации -->
+    <div class="container">        
 
-<!-- Контейнер для сообщения об отправке формы -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2" id="MessageFormSend">
+        <?= $errorLogin; ?>
 
-<?php if ($form_send): ?>
-
-                <div class="alert alert-success">
-                    <button class="close" data-dismiss="alert">×</button>
-                    <strong>Поздравляем!</strong>
-                    Ваш отзыв успешно отправлен.
-                </div>
-
-<?php endif; ?>
-
-            </div>
-        </div>
     </div>
-
+    
     <!-- контейнер для отзывов -->
     <div class="container" id="main">
 
@@ -121,40 +91,18 @@ switch($sortby) {
         </div>
     </div>
 
-    <!-- Форма обратной связи -->
-<?php if (!$is_admin):?>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+    <!-- Контейнер для сообщения об отправке формы -->
+    <div class="container">        
 
-    <form class="well" id="feedback" method="post" enctype="multipart/form-data" action="index.php"><fieldset>
-        <div class="form-group col-md-4">
-    <label class="sr-only" for="name">Имя</label>
-    <input type="text" class="form-control inline" id="name" name="name" placeholder="Имя">
-        </div>
-        <div class="form-group col-md-4">
-    <label class="sr-only" for="email">Email address</label>
-    <input type="email" class="form-control inline" id="email" name="email" placeholder="Email">
-        </div>
-        <div class="form-group col-md-4">
-     <label for="file">Загрузить картинку</label>
-     <input type="file" id="file" name="image">
-        <p class="help-block">Здесь Вы можете прикрепить к отзыву картинку</p>
-        </div>
-        <div class="form-group">
-    <textarea class="form-control" rows="3" name="text"
-        placeholder="Напишите свой отзыв здесь"></textarea>
-        </div>
+        <?= $message; ?>
 
-        <div class="form-group col-md-6 col-md-offset-6">
-    <button type="button" class="btn btn-info" onclick="ajaxFormRequest('div#preview', 'form#feedback', '/preview.php'); return false">Предварительный просмотр</button>
-    <button type="submit" class="btn btn-primary">Отправить</button>
-        </div>
-    </fieldset></form>
-            </div>
-        </div>
     </div>
-<?php endif; ?>
+    
+    <!-- Якорь перехода к форме -->
+    <a name="feedbackform"></a>
+    
+    <!-- Форма обратной связи -->
+<?= $feedForm; ?>    
 
     <script src="/js/jquery-3.1.0.js"></script>
     <script src="/js/bootstrap.min.js"></script>
