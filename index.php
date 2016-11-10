@@ -40,12 +40,7 @@ session_start();
     $view = new \App\View\View;
     $view->page = [
             'title' => 'Просмотр оставленных отзывов',
-            'loginForm' => '<p class="navbar-text">Hello, Admin!</p>',
-            'feedForm' => '',
-            'comments' => 'None comments',
-            'message' => 'Nothing to message',
-            'errorLogin' => '',
-            'sortby' => ''];
+            'loginForm' => '<p class="navbar-text">Hello, Admin!</p>'];
         echo $view->render(__DIR__ . '/App/templates/mainView.php');
      
 

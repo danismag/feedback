@@ -1,4 +1,4 @@
-<?php if(!$username): ?>
+<?php if(false): ?>
 <!-- Форма обратной связи
 
     Принимает следующие данные:
@@ -19,12 +19,12 @@
     <div class="form-group col-md-4">
         <label class="sr-only" for="name">Имя</label>
         <input type="text" class="form-control inline" id="name"
-            name="name" placeholder="Имя" value="<?= $username; ?>">
+            name="name" placeholder="Имя" value="<?= ($username ?? ''); ?>">
     </div>
     <div class="form-group col-md-4">
         <label class="sr-only" for="email">Email address</label>
         <input type="email" class="form-control inline" id="email" 
-            name="email" placeholder="Email" value="<?= $email; ?>">
+            name="email" placeholder="Email" value="<?= ($email ?? ''); ?>">
     </div>
     <div class="form-group col-md-4">
         <label for="file">Загрузить картинку</label>
@@ -34,7 +34,7 @@
     <div class="form-group">
         <textarea class="form-control" rows="3" name="text"
             placeholder="Напишите свой отзыв здесь">
-        <?= $text; ?>
+        <?= ($text ?? ''); ?>
         </textarea>
     </div>
 

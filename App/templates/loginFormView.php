@@ -1,5 +1,6 @@
+<?php if (false): ?>
 <!-- Форма входа -->
-
+<?php endif; ?>
 <form class="navbar-form navbar-right" method="POST">
     <div class="form-group">
         <label class="sr-only" for="loginfield">Логин</label>

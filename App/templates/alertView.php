@@ -1,4 +1,4 @@
-<?php if (!$message): ?>
+<?php if (false): ?>
 <!-- шаблон сообщения о статусе действия
     Принимает следующие данные:
 
@@ -9,7 +9,7 @@
  
  <?php
  
-     switch ($status) {
+     switch (($status) ?? '') {
      
          case 'success':
              $alert = 'alert-success';
@@ -36,7 +36,7 @@
         <div class="alert <?= $alert; ?>">
             <button class="close" data-dismiss="alert">×</button>
         
-            <?= $message; ?>
+            <?= ($message ?? ''); ?>
             
         </div>
     </div>

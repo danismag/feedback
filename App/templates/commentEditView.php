@@ -1,4 +1,4 @@
-<?php if (!$id_comment): ?>
+<?php if (false): ?>
 <!--
     Форма для редактирования отзыва
 
@@ -26,7 +26,7 @@
     <input type="email" class="form-control inline" id="email" name="email" placeholder="Email" value="<?= $email; ?>">
         </div>
         <div class="form-group col-md-4">
-    <img class="img-rounded img-responsive center-block" src="<?= $image; ?>">
+    <img class="img-rounded img-responsive center-block" src="<?= ($image ?? ''); ?>">
         </div>
         <div class="form-group">
     <textarea class="form-control" rows="6" name="text"

@@ -1,13 +1,13 @@
-<?php if(!$title): ?>
+<?php if(false): ?>
 <!--
     Шаблон главной страницы
 
-    Должны быть переданы следующие данные:
+    могут быть переданы следующие данные:
 
     $title -        заголовок страницы
     $loginForm -    html-код формы входа или текст приветствия админа
     $feedForm -     html-код с формой отправки отзыва
-    $comments -     html-код с отзывами или формой редактирования отзыва
+    $content -     html-код с отзывами или формой редактирования отзыва
     $message -      html-код для сообщений о статусе действий
     $errorLogin     html-код сообщения о неудаче авторизации
     $sortby -       строка с указанием типа сортировки отзывов
@@ -15,13 +15,12 @@
 
 -->
 <?php endif; ?>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $title; ?></title>
+    <title><?= ($title ?? ''); ?></title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
      <link href="/App/css/feedmain.css" rel="stylesheet">
 </head>
@@ -39,7 +38,7 @@ $sortbydate = '';
 $sortbyemail = '';
 $sortbyname = '';
 $display = true;
-switch($sortby) {
+switch(($sortby) ?? '') {
     case 'date':
         $sortbydate = 'active';
         break;
@@ -65,7 +64,7 @@ switch($sortby) {
         </div>
 
         <!-- Форма Входа -->
-<?= $loginForm; ?>
+<?= ($loginForm ?? '<p class="navbar-text">Добрый день, Админ!</p>'); ?>
  
         </div>
     </nav>
@@ -73,14 +72,14 @@ switch($sortby) {
     <!-- Контейнер для сообщений о неудачной аутентификации -->
     <div class="container">        
 
-        <?= $errorLogin; ?>
+        <?= ($errorLogin ?? ''); ?>
 
     </div>
     
     <!-- контейнер для отзывов -->
     <div class="container" id="main">
 
-<?= $comments; ?>
+<?= ($content ?? ''); ?>
 
     </div>
 
@@ -94,7 +93,7 @@ switch($sortby) {
     <!-- Контейнер для сообщения об отправке формы -->
     <div class="container">        
 
-        <?= $message; ?>
+        <?= ($message ?? ''); ?>
 
     </div>
     
@@ -102,7 +101,7 @@ switch($sortby) {
     <a name="feedbackform"></a>
     
     <!-- Форма обратной связи -->
-<?= $feedForm; ?>    
+<?= ($feedForm ?? ''); ?>    
 
     <script src="/js/jquery-3.1.0.js"></script>
     <script src="/js/bootstrap.min.js"></script>
