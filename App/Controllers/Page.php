@@ -31,41 +31,60 @@ class Page extends Base
     // - вывод сообщений о состоянии
     protected function actionIndex($sort = 'sortbydate')
     {
-        $errors = [];       // массив сообщений об ошибках
+        $errors = [];       // массив сообщений об ошибках формы отзыва
+        $log = [];          // сообщения об ошибке входа
         
         // если были отправлены данные
         if ($this->isPost()) {
             
-            try {
-                
-                $this->login();
-                
-            } catch(\Exception $e) {
-                
-                $errors[] = $e->getMessage();
+            if (isset($_POST['login'])) {
+                try {
+                    
+                    $this->login();
+                    
+                } catch(\Exception $e) {
+                    
+                    $log[] = ['message' => $e->getMessage()];
+                }
             }
             
+            if (isset($_POST['feedform'])) {
+                
+                try {
+                    
+                    $this->feedForm();
+                    
+                } catch(\App\Exceptions\Multiexception $e) {
+                    
+                    $errors[] = ['status' => 'warning',
+                        'message' => $e->getMessage()];
+                }
+            }
+            
+            if (isset($_POST['preview'])) {
+                
+                $this->preview();
+                die;
+            }
         } 
         
-        $comments = '';      // html-код отзывов
+        $comments = [];         // массив отзывов
         
-        // подготовка каждого отзыва к отображению
-        while ($comment = \App\Models\Comment::getComment($sort)) {
+        // Формирование массива отзывов
+        while (\App\Models\Comment::getComment($sort)) {
             
-            $view = new \App\View\View;
-            $view->comment = $comment;
-            $comments .= $view->render(__DIR__ . '/App/templates/commentView.php');
-        }         
+            $comments[] = \App\Models\Comment::getComment($sort); 
+        }
         
-        // отрисовка главной страницы
-        $this->view->page = [
-            'title' => 'Просмотр оставленных отзывов',
-            'is_admin' => '0',
-            'form_send' => '0',
-            'comments' => $comments,
-            'sortby' => $sort];
-        echo $this->view->render(__DIR__ . '/App/templates/mainView.php');
-        echo 'Контроллер страницы Просмотра!<br>';
+        
+        // передача данных и отрисовка главной страницы
+        $this->view->title = 'Просмотр оставленных отзывов';
+        $this->view->sortby = $sort;
+        $this->view->feed = $comments;
+        $this->view->errors = $errors;
+        $this->view->login = $log;
+        
+        $this->view->mainPage();
     }
 
     protected function actionPreview()

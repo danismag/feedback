@@ -23,7 +23,11 @@ abstract class Controller
         
         $this->before();
         
-        return $this->$MethodName($id);      
+        if (null != $id) {
+            
+            return $this->$MethodName($id);
+        }
+        return $this->$MethodName();      
     }
     
     /**

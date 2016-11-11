@@ -47,6 +47,21 @@ abstract class Base extends Controller
         \App\Etc\Auth::closeSession();   
     }
     
+    /**
+    *   обработка формы отзыва
+    */
+    protected function feedForm()
+    {
+        // TODO
+    }
+    
+    /**
+    *   предпросмотр отзыва
+    */
+    protected function preview()
+    {
+        // TODO
+    }
     
     /**
     *   Действия до вызова основного метода

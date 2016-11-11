@@ -39,10 +39,10 @@
     </div>
 
     <div class="form-group col-md-6 col-md-offset-6">
-        <button type="button" class="btn btn-info" 
+        <button type="button" class="btn btn-info" name="preview" value="1"
             onclick="ajaxFormRequest('div#preview', 'form#feedback', '/preview.php');
             return false">Предварительный просмотр</button>
-        <button type="submit" class="btn btn-primary">Отправить</button>
+        <button type="submit" class="btn btn-primary" name="feedform" value="1">Отправить</button>
     </div>
     </fieldset>
 </form>

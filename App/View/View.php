@@ -8,20 +8,22 @@ namespace App\View;
 *   'form' = - объект отзыва для отображения в форме
 *   'feed' = [] - массив объектов-отзывов
 *   'comment' - объект отзыва для просмотра
+*   'errors' = [] - массив исключений ['status', 'message']
+*   'login' - исключение входа пользователя
 *   @property array $data - массив для хранения данных
 */
 class View
 {   
     // Пути к шаблонам
     
-    const TMAIN         = __DIR__ . '/App/templates/mainView.php';
-    const TLOGINFORM    = __DIR__ . '/App/templates/loginFormView.php';
-    const TFEEDFORM     = __DIR__ . '/App/templates/feedFormView.php';
-    const TCOMMENT      = __DIR__ . '/App/templates/commentView.php';
-    const TPREVIEW      = __DIR__ . '/App/templates/commentPreView.php';
-    const TALERT        = __DIR__ . '/App/templates/alertView.php';
-    const TCOMADMIN     = __DIR__ . '/App/templates/commentAdminView.php';
-    const TCOMEDIT      = __DIR__ . '/App/templates/commentEditView.php';
+    const TMAIN         = __DIR__ . '/../templates/mainView.php';
+    const TLOGINFORM    = __DIR__ . '/../templates/loginFormView.php';
+    const TFEEDFORM     = __DIR__ . '/../templates/feedFormView.php';
+    const TCOMMENT      = __DIR__ . '/../templates/commentView.php';
+    const TPREVIEW      = __DIR__ . '/../templates/commentPreView.php';
+    const TALERT        = __DIR__ . '/../templates/alertView.php';
+    const TCOMADMIN     = __DIR__ . '/../templates/commentAdminView.php';
+    const TCOMEDIT      = __DIR__ . '/../templates/commentEditView.php';
     
     
     // поле для хранения переданных данных
@@ -48,18 +50,24 @@ class View
     /**
     *   Отображение главной страницы
     *
-    *   @param array 'comments' - массив отзывов
-    *   @param \App\Model\User 'user' - объект пользователя
+    *   @param object 'form' - объект отзыва для отображения в форме
+    *   @param array 'feed' - массив отзывов
+    *   @param array 'errors' - массив сообщений об исключениях
+    *   @param array 'login' - сообщение о входе
     */
     public function mainPage()
     {
+        // Подготовка данных
         $this->data['loginForm'] = $this->emptyRender(self::TLOGINFORM);
         $this->data['feedForm'] = $this->commentRender('form', self::TFEEDFORM);
-        $this->data['content'] = $this->comsRender('feed' ,self::TCOMMENT);
+        $this->data['content'] = $this->comsRender('feed', self::TCOMMENT);
+        $this->data['message'] = $this->commentRender('errors', self::TALERT);
+        $this->data['errorLogin'] = $this->commentRender('login', self::TALERT);
         
-        
+        // Отображение главного шаблона
+        echo $this->render(self::TMAIN);
     }
-    
+       
     /**
     *   Получение html-кода массива отзывов
     *

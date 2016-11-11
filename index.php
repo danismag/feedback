@@ -29,19 +29,16 @@ session_start();
             $controller = new App\Controllers\Page;
             break;        
     }
-    
-    /*
-    $action = 'action' . ucfirst($params[1] ?? 'index');
+        
+    $action = ucfirst($params[1] ?? 'index');
     
     $id = ($params[2] ?? null);
     
-    $controller->action($action, $id);*/
+    if (null != $id) {
+        
+        $controller->action($action, $id);
+    }
     
-    $view = new \App\View\View;
-    $view->page = [
-            'title' => 'Просмотр оставленных отзывов',
-            'loginForm' => '<p class="navbar-text">Hello, Admin!</p>'];
-        echo $view->render(__DIR__ . '/App/templates/mainView.php');
-     
-
+    $controller->action($action);
+       
 ?>
