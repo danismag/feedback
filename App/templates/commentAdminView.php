@@ -9,7 +9,7 @@ $username -     имя пользователя, оставившего отзы
 $email -        email пользователя
 $create_time -  дата и время создания отзыва
 $text -         текст отзыва
-$image -        путь к изображению (если есть)
+$imagepath -        путь к изображению (если есть)
 $edited -       был ли отзыв отредактирован
 $edit_time -    время редактирования (если установлен предыдущий параметр)
 -->
@@ -30,11 +30,11 @@ $edit_time -    время редактирования (если установ
         </div>
 
         <div class="panel-body">
-<?php if($image): ?>
+<?php if($imagepath): ?>
             <div class="col-md-6">
 
     <!-- Отображение миниатюры картинки, прикрепленной к отзыву -->
-    <span><img class="img-rounded img-responsive center-block" src="<?= $image; ?>">
+    <span><img class="img-rounded img-responsive center-block" src="<?= $imagepath; ?>">
     &nbsp;</span>
             </div>
 <?php endif; ?>

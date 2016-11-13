@@ -68,19 +68,10 @@ class Page extends Base
             }
         } 
         
-        $comments = [];         // массив отзывов
-        
-        // Формирование массива отзывов
-        while (\App\Models\Comment::getComment($sort)) {
-            
-            $comments[] = \App\Models\Comment::getComment($sort); 
-        }
-        
-        
         // передача данных и отрисовка главной страницы
         $this->view->title = 'Просмотр оставленных отзывов';
         $this->view->sortby = $sort;
-        $this->view->feed = $comments;
+        $this->view->feed = \App\Models\Comment::getComments($sort);
         $this->view->errors = $errors;
         $this->view->login = $log;
         
@@ -89,27 +80,41 @@ class Page extends Base
 
     protected function actionPreview()
     {
-        if (!M_Users::Instance()->Can()) {
-            $this->redirect('/index');
-        }
-
-        $this -> title .= '::Редактирование';
-        $id = isset($this->params[2]) ? (int)$this->params[2] : 1;
-        $mPages = M_Pages::Instance();
-
-            if ($this -> isPost()) {
-                $mPages->text_set($_POST['text'], $id);
-                $this->redirect("/feedback/index/$id");
-            }   
-
-            $text= $mPages->text_get($id);
-            $this->content = $this->Template('view/v_edit.php', array('text' => $text));
-
+        /*try {
+            $this->view->comment = \App\Models\Comment::validate(
+                $_POST['username'], $_POST['email'], $_POST['text']);
+            
+            $this->view->image = \App\Models\Image::create($_FILES['image']);
+            
+        } catch(\App\Exceptions\Multiexception $e) {
+            
+        }*/
+       
+       var_dump($_POST);
+        //$this->view->preview();
     }
     
     protected function actionForm()
     {
             //TODO
+        try {
+           
+           $comment = \App\Models\Comment::validate($_POST['username'], 
+               $_POST['email'], $_POST['text']);
+           
+       } catch(\App\Exceptions\Multiexception $ev) {
+           
+           $errors = [];       // массив сообщений об ошибках формы отзыва
+           foreach($ev as $e) {
+               
+                $errors[] = ['status' => 'warning',
+                        'message' => $e->getMessage()];
+           }
+           
+           $this->view->errors = $errors;
+           
+           $this->actionIndex();
+       }
     }
 
 }

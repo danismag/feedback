@@ -8,7 +8,7 @@
     $username -     имя пользователя, оставившего отзыв
     $email -        email пользователя
     $text -         текст отзыва
-    $image -        путь к изображению (если есть)
+    $imagepath -        путь к изображению (если есть)
 
 -->
 <?php endif; ?>
@@ -26,7 +26,7 @@
     <input type="email" class="form-control inline" id="email" name="email" placeholder="Email" value="<?= $email; ?>">
         </div>
         <div class="form-group col-md-4">
-    <img class="img-rounded img-responsive center-block" src="<?= ($image ?? ''); ?>">
+    <img class="img-rounded img-responsive center-block" src="<?= ($imagepath ?? ''); ?>">
         </div>
         <div class="form-group">
     <textarea class="form-control" rows="6" name="text"

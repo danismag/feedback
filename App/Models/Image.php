@@ -74,7 +74,7 @@ class Image
     *   @param string $ext расширение создаваемого файла
     *   @return string полный путь к файлу
     **/
-    public static function generateName($ext)
+    private static function generateName($ext)
     {
         return (__dir__ . '/images/'.md5(uniqid() . time()) . ".$ext");
     }

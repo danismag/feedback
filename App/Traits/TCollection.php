@@ -3,14 +3,16 @@
 namespace App\Traits;
 
 /**
-*   трейт реализации интерфейсов ArrayAccess и Iterator
-*
+*   трейт реализации интерфейсов ArrayAccess, Iterator
+*   и Countable
 */
 trait TCollection
 {
     protected  $data = [];
     
+    //
     // Реализация интерфеса ArrayAccess
+    //
     public function offsetExists($offset)
     {
         return array_key_exists($offset, $this->data);
@@ -35,7 +37,9 @@ trait TCollection
         unset($this->data[$offset]);        
     }
     
+    //
     // Реализация интерфеса Iterator
+    //
     public function current()
     {
         return current($this->data);        
@@ -59,6 +63,14 @@ trait TCollection
     public function valid()
     {
         return false !== current($this->data);        
+    }
+    
+    //
+    //  Реализация интерфейса Countable
+    //
+    public function count()
+    {
+        return count($this->data);
     }
 }
 

@@ -14,12 +14,12 @@
         <div class="col-md-8 col-md-offset-2">
 
 <form class="well" id="feedback" method="post" enctype="multipart/form-data" 
-    action="index.php">
+    action="/page/form">
     <fieldset>
     <div class="form-group col-md-4">
         <label class="sr-only" for="name">Имя</label>
         <input type="text" class="form-control inline" id="name"
-            name="name" placeholder="Имя" value="<?= ($username ?? ''); ?>">
+            name="username" placeholder="Имя" value="<?= ($username ?? ''); ?>">
     </div>
     <div class="form-group col-md-4">
         <label class="sr-only" for="email">Email address</label>
@@ -28,7 +28,7 @@
     </div>
     <div class="form-group col-md-4">
         <label for="file">Загрузить картинку</label>
-        <input type="file" id="file" name="image">
+        <input type="file" id="imagefile" name="image">
         <p class="help-block">Здесь Вы можете прикрепить к отзыву картинку</p>
     </div>
     <div class="form-group">
@@ -40,7 +40,7 @@
 
     <div class="form-group col-md-6 col-md-offset-6">
         <button type="button" class="btn btn-info" name="preview" value="1"
-            onclick="ajaxFormRequest('div#preview', 'form#feedback', '/preview.php');
+            onclick="ajaxFormRequest('div#preview', 'form#feedback', '/page/preview');
             return false">Предварительный просмотр</button>
         <button type="submit" class="btn btn-primary" name="feedform" value="1">Отправить</button>
     </div>

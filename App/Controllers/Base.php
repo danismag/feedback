@@ -55,13 +55,6 @@ abstract class Base extends Controller
         // TODO
     }
     
-    /**
-    *   предпросмотр отзыва
-    */
-    protected function preview()
-    {
-        // TODO
-    }
     
     /**
     *   Действия до вызова основного метода

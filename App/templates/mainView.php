@@ -84,11 +84,7 @@ switch(($sortby) ?? '') {
     </div>
 
     <!-- Контейнер для предпросмотра отзыва (ajax-запрос) -->
-    <div class="container" id="outpreview">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2" id="preview"></div>
-        </div>
-    </div>
+    <div class="container" id="preview"></div>
 
     <!-- Контейнер для сообщения об отправке формы -->
     <div class="container">        
@@ -104,6 +100,7 @@ switch(($sortby) ?? '') {
 <?= ($feedForm ?? ''); ?>    
 
     <script src="/js/jquery-3.1.0.js"></script>
+    <script src="/js/jquery.form.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/App/js/feedjs.js"></script>
   </body>

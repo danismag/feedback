@@ -29,7 +29,8 @@ session_start();
             $controller = new App\Controllers\Page;
             break;        
     }
-        
+    
+    // Название с большой буквы
     $action = ucfirst($params[1] ?? 'index');
     
     $id = ($params[2] ?? null);

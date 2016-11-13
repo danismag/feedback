@@ -10,6 +10,7 @@ namespace App\View;
 *   'comment' - объект отзыва для просмотра
 *   'errors' = [] - массив исключений ['status', 'message']
 *   'login' - исключение входа пользователя
+*   'image' - объект изображения
 *   @property array $data - массив для хранения данных
 */
 class View
@@ -61,13 +62,31 @@ class View
         $this->data['loginForm'] = $this->emptyRender(self::TLOGINFORM);
         $this->data['feedForm'] = $this->commentRender('form', self::TFEEDFORM);
         $this->data['content'] = $this->comsRender('feed', self::TCOMMENT);
-        $this->data['message'] = $this->commentRender('errors', self::TALERT);
-        $this->data['errorLogin'] = $this->commentRender('login', self::TALERT);
+        $this->data['message'] = $this->alertRender('errors', self::TALERT);
+        $this->data['errorLogin'] = $this->alertRender('login', self::TALERT);
         
         // Отображение главного шаблона
         echo $this->render(self::TMAIN);
     }
-       
+    
+    /**
+    *   Предпросмотр отзыва
+    *
+    *   @param object 'comment' - объект отзыва
+    */
+    public function preview()
+    {
+        if (isset($this->data['comment'])) {
+            
+            if (isset($this->data['image'])) {
+                
+                $this->data['comment'][] = $this->data['image'];
+            }
+            
+            echo $this->commentRender('comment', self::TPREVIEW);
+        }
+    }
+    
     /**
     *   Получение html-кода массива отзывов
     *
@@ -116,6 +135,32 @@ class View
     }
     
     /**
+    *   Внесение данных сообщения в шаблон
+    *
+    *   @param object $alert - массив отзыва
+    *   @param string $template - путь к шаблону
+    *   @return string - html-код сообщения
+    */
+    private function alertRender($alert, $template)
+    {
+        
+        if (isset($this->data[$alert]['message'])) {
+            
+            ob_start();
+            
+            foreach($this->data[$alert] as $key => $val) {
+                
+                $$key = $val;
+            }
+            
+            include $template;
+            
+            return ob_get_clean();
+        }
+        
+    }
+    
+    /**
     *   "простое" внесение данных в шаблон
     *
     *   @return string 
@@ -139,7 +184,7 @@ class View
     }   
     
     /**
-    *   пустой шаблон
+    *   только пустой шаблон
     *
     *   @return string 
     *   @param $template string - путь к шаблону

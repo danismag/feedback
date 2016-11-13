@@ -59,7 +59,7 @@ class Comment extends Model
         
         if ($text == '') {
             
-            $err[] = new \Exception('Введите текс отзыва');
+            $err[] = new \Exception('Введите текст отзыва');
         }
 
         // Валидация e-mail
@@ -69,7 +69,7 @@ class Comment extends Model
         }
 
         // подсчет исключений
-        if (!empty($err)) {
+        if (count($err) > 0) {
             
             throw $err;
             return null;            
@@ -88,9 +88,9 @@ class Comment extends Model
     *   
     *   @param string $sort - параметр сортировки 'sortbydate', 'sortbyname' , 'sortbyemail'
     *   @param bool $not_approved - выводить ли неодобренные отзывы
-    *   @return Comment - объект отзыва один за другим
+    *   @return Comment - массив объектов отзывов
     */
-    public static function getComment($sort, $not_approved = false)
+    public static function getComments($sort, $not_approved = false)
     {
 
         // Выводить ли неодобренные отзывы
@@ -118,7 +118,7 @@ class Comment extends Model
             
         $db = MSQL::instance();
             
-        return $db->selectOne($sql, self::class);
+        return $db->select($sql, self::class);
     }
     
     /**
