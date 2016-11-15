@@ -5,11 +5,13 @@
 function ajaxFormRequest(result_selector, form_selector, url)
 {
     $.ajax({
-        type: "POST",
+        type: 'POST',
         url: url,
-        dataType: "multipart/form-data",
+        contentType: 'multipart/form-data',
+        dataType: 'html',
         data: $(form_selector).formSerialize(),
         cache: false,
+        processData: false,
         success: function (response) {
             $(result_selector).html(response);
         },

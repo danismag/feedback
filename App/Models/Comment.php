@@ -52,20 +52,19 @@ class Comment extends Model
             $err[] = new \Exception('Введите имя пользователя');
         }
         
-        if ($email == '') {
-            
-            $err[] = new \Exception('Введите e-mail');
-        }
-        
         if ($text == '') {
             
             $err[] = new \Exception('Введите текст отзыва');
         }
 
         // Валидация e-mail
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if ($email == '') {
             
-            $err[] = new \Exception('Введенный e-mail не соотвествует стандартам');
+            $err[] = new \Exception('Введите e-mail');
+            
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            
+            $err[] = new \Exception('Введенный e-mail не соответствует стандартам');
         }
 
         // подсчет исключений
@@ -136,18 +135,12 @@ class Comment extends Model
     /**
     *   Сохранение отзыва в БД
     *
-    *   @param string $image - путь к файлу с изображением
     *   @return bool - сохранен ли отзыв в БД
     */
-    public function create($image = null)
+    public function create()
     {
 
-        if ($image != null) {
-            
-            $this->image = $image;
-        }
-
-        if ($this->db->insert(self::TABLE, self)) {
+        if ($this->db->insert(self::TABLE, self::class)) {
                 
             throw new \Exception('Отзыв успешно сохранен');
                 

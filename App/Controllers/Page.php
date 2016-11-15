@@ -48,31 +48,12 @@ class Page extends Base
                 }
             }
             
-            if (isset($_POST['feedform'])) {
-                
-                try {
-                    
-                    $this->feedForm();
-                    
-                } catch(\App\Exceptions\Multiexception $e) {
-                    
-                    $errors[] = ['status' => 'warning',
-                        'message' => $e->getMessage()];
-                }
-            }
-            
-            if (isset($_POST['preview'])) {
-                
-                $this->preview();
-                die;
-            }
         } 
         
         // передача данных и отрисовка главной страницы
         $this->view->title = 'Просмотр оставленных отзывов';
         $this->view->sortby = $sort;
         $this->view->feed = \App\Models\Comment::getComments($sort);
-        $this->view->errors = $errors;
         $this->view->login = $log;
         
         $this->view->mainPage();
@@ -90,31 +71,31 @@ class Page extends Base
             
         }*/
        
-       var_dump($_POST);
+       var_dump($_FILES);
         //$this->view->preview();
     }
     
     protected function actionForm()
     {
-            //TODO
+        // создание отзыва
         try {
            
            $comment = \App\Models\Comment::validate($_POST['username'], 
                $_POST['email'], $_POST['text']);
-           
-       } catch(\App\Exceptions\Multiexception $ev) {
-           
-           $errors = [];       // массив сообщений об ошибках формы отзыва
-           foreach($ev as $e) {
                
-                $errors[] = ['status' => 'warning',
-                        'message' => $e->getMessage()];
-           }
+           $comment->image = \App\Models\Image::create($_FILES['image']);
            
-           $this->view->errors = $errors;
+           $comment->create();
            
-           $this->actionIndex();
+       } catch(\App\Exceptions\Multiexception $e) {
+           
+            $this->view->warning = $e;
+           
        }
+       
+       $this->view->form = $_POST;
+                
+       $this->actionIndex();
     }
 
 }

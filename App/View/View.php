@@ -3,14 +3,16 @@
 namespace App\View;
 
 /**
-*   Класс для отображения страниц
+*   Класс для отображения страниц -
+*   реализует "магические" способы доступа к данным на лету
 *   
 *   'form' = - объект отзыва для отображения в форме
 *   'feed' = [] - массив объектов-отзывов
 *   'comment' - объект отзыва для просмотра
-*   'errors' = [] - массив исключений ['status', 'message']
-*   'login' - исключение входа пользователя
 *   'image' - объект изображения
+*   'warning' = [] - массив мультиисключений об ошибках
+*   'info' = [] - массив информационных сообщений
+*   'success' = [] - массив сообщений об успешных действиях
 *   @property array $data - массив для хранения данных
 */
 class View
@@ -62,8 +64,8 @@ class View
         $this->data['loginForm'] = $this->emptyRender(self::TLOGINFORM);
         $this->data['feedForm'] = $this->commentRender('form', self::TFEEDFORM);
         $this->data['content'] = $this->comsRender('feed', self::TCOMMENT);
-        $this->data['message'] = $this->alertRender('errors', self::TALERT);
-        $this->data['errorLogin'] = $this->alertRender('login', self::TALERT);
+        $this->data['message'] = $this->alertsRender('warning', self::TALERT);
+        //$this->data['errorLogin'] = $this->alertsRender('login', self::TALERT);
         
         // Отображение главного шаблона
         echo $this->render(self::TMAIN);
@@ -135,29 +137,52 @@ class View
     }
     
     /**
+    *   Получение html-кода сообщений об ошибках
+    *
+    *   @param object $alert - объект мультисключения
+    *   @param string $template - путь к шаблону
+    *   @return string - html-код сообщений
+    */
+    private function alertsRender($alert, $template)
+    {
+        $result = '';
+                
+        if (isset($this->data[$alert])) {
+            
+            foreach($this->data[$alert] as $e) {
+                
+                $result .= $this->exceptionRender($e, $alert, $template);
+            }
+            
+            return $result;
+        }
+        
+    }
+    
+    /**
     *   Внесение данных сообщения в шаблон
     *
-    *   @param object $alert - массив отзыва
+    *   @param Exception $e - объект исключения
+    *   @param string $type - тип сообщения (по шаблону)
     *   @param string $template - путь к шаблону
     *   @return string - html-код сообщения
     */
-    private function alertRender($alert, $template)
+    private function exceptionRender($e, $type, $template)
     {
         
-        if (isset($this->data[$alert]['message'])) {
+        if (isset($e)) {
             
             ob_start();
             
-            foreach($this->data[$alert] as $key => $val) {
-                
-                $$key = $val;
-            }
+            $message = $e->getMessage();
+            $status = $type;
             
             include $template;
             
             return ob_get_clean();
         }
         
+        return ;
     }
     
     /**
