@@ -62,10 +62,11 @@ class View
     {
         // Подготовка данных
         $this->data['loginForm'] = $this->emptyRender(self::TLOGINFORM);
-        $this->data['feedForm'] = $this->commentRender('form', self::TFEEDFORM);
+        $this->data['feedForm'] = $this->defRender('form', self::TFEEDFORM);
         $this->data['content'] = $this->comsRender('feed', self::TCOMMENT);
         $this->data['message'] = $this->alertsRender('warning', self::TALERT);
-        //$this->data['errorLogin'] = $this->alertsRender('login', self::TALERT);
+        $this->data['message'] .= $this->exceptionRender($this->data['success'],
+             'success', self::TALERT);
         
         // Отображение главного шаблона
         echo $this->render(self::TMAIN);
@@ -119,6 +120,31 @@ class View
     *   @return string - html-код отзыва
     */
     private function commentRender($com, $template)
+    {
+        ob_start();
+        
+        if (isset($com)) {
+            
+            foreach($com as $key => $val) {
+                
+                $$key = $val;
+            }
+            
+        }
+        
+        include $template;
+        
+        return ob_get_clean();        
+    }
+    
+    /**
+    *   Внесение данных в шаблон
+    *
+    *   @param object $com - объект с данными
+    *   @param string $template - путь к шаблону
+    *   @return string - html-код данных
+    */
+    private function defRender($com, $template)
     {
         ob_start();
         

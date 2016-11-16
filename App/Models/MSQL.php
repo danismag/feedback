@@ -103,10 +103,12 @@ class MSQL
 
         $colomns = [];
         $values = [];
+        $masks = [];
 
         foreach ($object as $key => $value) {
             // предотвращение вставки поля id
-            if (substr_count($value, 'id', 0, 2)) {
+            if (substr_count($key, 'id', 0, 2)) {
+                
                 continue;
             }
             $colomns[] = $key;

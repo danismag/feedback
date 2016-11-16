@@ -17,13 +17,13 @@ abstract class Controller
     *   
     *   @param $action string вторая часть имени вызываемого метода
     */
-    public function action($action, $id = null)        
+    public function action($action, $id = '')        
     {
         $MethodName = 'action' . $action;
         
         $this->before();
         
-        if (null != $id) {
+        if ('' != $id) {
             
             return $this->$MethodName($id);
         }

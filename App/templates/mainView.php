@@ -10,6 +10,7 @@
     $content -     html-код с отзывами или формой редактирования отзыва
     $message -      html-код для сообщений о статусе действий
     $errorLogin     html-код сообщения о неудаче авторизации
+    $url            текущий адрес страницы
     $sortby -       строка с указанием типа сортировки отзывов
     ('date', 'name', 'email' или 'no' - не отображать сортировку)
 
@@ -29,7 +30,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">Главная</a>
-                <a class="navbar-brand" href=#feedbackform>К форме обратной связи</a>
+                <a class="navbar-brand" href=#feedbackform>К форме</a>
             </div>
 
            <!--  Вкладки для сортировки -->
@@ -38,27 +39,27 @@ $sortbydate = '';
 $sortbyemail = '';
 $sortbyname = '';
 $display = true;
-switch(($sortby) ?? '') {
-    case 'date':
+switch($sortby) {
+    case 'sortbydate':
         $sortbydate = 'active';
         break;
-    case 'email':
+    case 'sortbyemail':
         $sortbyemail = 'active';
         break;
-    case 'name':
+    case 'sortbyname':
         $sortbyname = 'active';
         break;
     default:
-        $display = false;
+        $sortbydate = 'active';
         break;
 }
 ?>
-        <div class="col-md-4 col-md-offset-1">
+        <div class="col-md-4">
 <?php if ($display): ?>
         <ul class="nav nav-pills nav-justified">
-            <li role="presentation" class="<?= $sortbydate; ?>"><a href="/index.php">по дате</a></li>
-            <li role="presentation" class="<?= $sortbyname; ?>"><a href="/index.php?sort=sortbyname">по имени</a></li>
-            <li role="presentation" class="<?= $sortbyemail; ?>"><a href="/index.php?sort=sortbyemail">по e-mail</a></li>
+            <li role="presentation" class="<?= $sortbydate; ?>"><a href="<?= $url;?>/">по дате</a></li>
+            <li role="presentation" class="<?= $sortbyname; ?>"><a href="<?= $url;?>/sortbyname">по имени</a></li>
+            <li role="presentation" class="<?= $sortbyemail; ?>"><a href="<?= $url;?>/sortbyemail">по e-mail</a></li>
         </ul>
 <?php endif; ?>
         </div>

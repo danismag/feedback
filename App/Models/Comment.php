@@ -14,8 +14,8 @@ class Comment extends Model
     public $username;                   // имя пользователя
     public $email;                      // e-mail пользователя
     public $image;                      // путь к файлу с изображением
-    public $create_time;                // дата/время создания отзыва
-    public $edit_time;                  // дата/время редактирования отзыва
+    //public $create_time;                // дата/время создания отзыва
+    //public $edit_time;                  // дата/время редактирования отзыва
     public $edited;                     // был ли отзыв отредактирован
     public $approved;                   // был ли отзыв одобрен
     protected $db;                      // подключение к БД
@@ -25,6 +25,9 @@ class Comment extends Model
     */
     public function __construct()
     {
+        $this->edited = 0;
+        $this->approved = 0;
+        
         $this->db = MSQL::instance();
     }
     
@@ -140,7 +143,7 @@ class Comment extends Model
     public function create()
     {
 
-        if ($this->db->insert(self::TABLE, self::class)) {
+        if ($this->db->insert(self::TABLE, $this)) {
                 
             throw new \Exception('Отзыв успешно сохранен');
                 

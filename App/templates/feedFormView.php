@@ -33,9 +33,7 @@
     </div>
     <div class="form-group">
         <textarea class="form-control" rows="3" name="text"
-            placeholder="Напишите свой отзыв здесь">
-        <?= ($text ?? ''); ?>
-        </textarea>
+            placeholder="Напишите свой отзыв здесь"><?= ($text ?? ''); ?></textarea>
     </div>
 
     <div class="form-group col-md-6 col-md-offset-6">

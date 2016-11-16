@@ -53,6 +53,7 @@ class Page extends Base
         // передача данных и отрисовка главной страницы
         $this->view->title = 'Просмотр оставленных отзывов';
         $this->view->sortby = $sort;
+        $this->view->url = '/page/index';
         $this->view->feed = \App\Models\Comment::getComments($sort);
         $this->view->login = $log;
         
@@ -83,7 +84,7 @@ class Page extends Base
            $comment = \App\Models\Comment::validate($_POST['username'], 
                $_POST['email'], $_POST['text']);
                
-           $comment->image = \App\Models\Image::create($_FILES['image']);
+           $comment->image = \App\Models\Image::create($_FILES['image'])->imagepath;
            
            $comment->create();
            
@@ -91,7 +92,11 @@ class Page extends Base
            
             $this->view->warning = $e;
            
+       } catch(\Exception $e) {
+           
+           $this->view->success = $e;
        }
+       
        
        $this->view->form = $_POST;
                 

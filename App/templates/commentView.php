@@ -26,7 +26,7 @@ $edit_time -    время редактирования (если установ
         </div>
 
         <div class="panel-body">
-<?php if($image): ?>
+<?php if('NULL' != $image): ?>
             <div class="col-md-6">
 
     <!-- Отображение картинки, прикрепленной к отзыву -->
