@@ -97,7 +97,6 @@ class Page extends Base
            $this->view->success = $e;
        }
        
-       
        $this->view->form = $_POST;
                 
        $this->actionIndex();

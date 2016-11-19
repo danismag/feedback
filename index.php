@@ -33,12 +33,8 @@ session_start();
     // Название с большой буквы
     $action = ucfirst($params[1] ?? 'index');
     
-    $id = ($params[2] ?? '');
+    $id = ($params[2] ?? 'sortbydate');
     
-    if ('' != $id) {
-        
-        $controller->action($action, $id);
-    }
-    
-    $controller->action($action);
+    $controller->action($action, $id);
+   
 ?>

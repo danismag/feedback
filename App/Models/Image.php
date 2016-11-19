@@ -29,7 +29,7 @@ class Image
         if ($file['error'] == UPLOAD_ERR_OK) {
 
             // ограничения на размер файла
-            if ($file['size'] > 4096) {
+            if ($file['size'] > 4194304) {
                 return null;
             }
 
@@ -50,7 +50,7 @@ class Image
             // сохранение загруженного файла под сгенерированным именем
             if ($ext) {                
                 $name = self::generateName($ext);
-
+                
                 if (move_uploaded_file($file['tmp_name'], $name)) {
                     
                     return new self($name);
@@ -76,7 +76,7 @@ class Image
     **/
     private static function generateName($ext)
     {
-        return (__dir__ . '/images/'.md5(uniqid() . time()) . ".$ext");
+        return (BASE_PATH . '/images/'. uniqid() . ".$ext");
     }
     
     /**
@@ -151,7 +151,7 @@ class Image
         $img = imagecreatetruecolor(self::WIDTH, self::HEIGHT);
         
         $ext = $this->getFormat($image);
-
+        
         switch ($ext) {
 
             case 'jpg':
@@ -220,7 +220,13 @@ class Image
             return false;
         }
 
-        $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') +    1));
+        $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') + 1));
+        
+        if ('jpeg' == $format) {
+            
+            $format = 'jpg';
+        }
+        
         return $format;
     }
 
