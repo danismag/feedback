@@ -19,14 +19,16 @@ class View
 {   
     // Пути к шаблонам
     
-    const TMAIN         = __DIR__ . '/../templates/mainView.php';
-    const TLOGINFORM    = __DIR__ . '/../templates/loginFormView.php';
-    const TFEEDFORM     = __DIR__ . '/../templates/feedFormView.php';
-    const TCOMMENT      = __DIR__ . '/../templates/commentView.php';
-    const TPREVIEW      = __DIR__ . '/../templates/commentPreView.php';
-    const TALERT        = __DIR__ . '/../templates/alertView.php';
-    const TCOMADMIN     = __DIR__ . '/../templates/commentAdminView.php';
-    const TCOMEDIT      = __DIR__ . '/../templates/commentEditView.php';
+    const TMAIN         = BASE_PATH . '/App/templates/mainView.php';
+    const TADMIN        = BASE_PATH . '/App/templates/adminView.php';
+    const TLOGINFORM    = BASE_PATH . '/App/templates/loginFormView.php';
+    const TLOGOUTFORM   = BASE_PATH . '/App/templates/logoutFormView.php';
+    const TFEEDFORM     = BASE_PATH . '/App/templates/feedFormView.php';
+    const TCOMMENT      = BASE_PATH . '/App/templates/commentView.php';
+    const TPREVIEW      = BASE_PATH . '/App/templates/commentPreView.php';
+    const TALERT        = BASE_PATH . '/App/templates/alertView.php';
+    const TCOMADMIN     = BASE_PATH . '/App/templates/commentAdminView.php';
+    const TCOMEDIT      = BASE_PATH . '/App/templates/commentEditView.php';
     
     
     // поле для хранения переданных данных
@@ -51,11 +53,11 @@ class View
     }
     
     /**
-    *   Отображение главной страницы
+    *   Отображение главной страницы просмотра
     *
     *   @param object 'form' - объект отзыва для отображения в форме
     *   @param array 'feed' - массив отзывов
-    *   @param array 'errors' - массив сообщений об исключениях
+    *   @param array 'alerts' - массив сообщений об исключениях
     *   @param array 'login' - сообщение о входе
     */
     public function mainPage()
@@ -65,11 +67,53 @@ class View
         $this->data['feedForm'] = $this->defRender('form', self::TFEEDFORM);
         $this->data['content'] = $this->comsRender('feed', self::TCOMMENT);
         $this->data['message'] = $this->alertsRender('warning', self::TALERT);
-        $this->data['message'] .= $this->exceptionRender($this->data['success'],
-             'success', self::TALERT);
-        
+        @$this->data['message'] .= $this->exceptionRender($this->data['success'], 
+            'success', self::TALERT);
+        @$this->data['errorLogin'] = $this->exceptionRender($this->data['login'], 
+            'danger', self::TALERT);
+            
         // Отображение главного шаблона
         echo $this->render(self::TMAIN);
+    }
+    
+    /**
+    *   Отображение главной страницы админа
+    * 
+    *   @param array 'feed' - массив отзывов
+    *   @param array 'success', 'warning' -исключения
+    */
+    public function adminPage()
+    {
+        // Подготовка данных
+        $this->data['logoutForm'] = $this->emptyRender(self::TLOGOUTFORM);
+        $this->data['content'] = $this->comsRender('feed', self::TCOMADMIN);
+        @$this->data['message'] = $this->exceptionRender($this->data['success'], 
+            'success', self::TALERT);
+        @$this->data['message'] .= $this->exceptionRender($this->data['warning'], 
+            'warning', self::TALERT);
+            
+        // Отображение главного шаблона
+        echo $this->render(self::TADMIN);
+    }
+    
+    /**
+    *   Отображение отзыва для редактирования
+    * 
+    *   @param array 'comment' - объект отзыва
+    *   @param array 'success', 'warning' -исключения
+    */
+    public function commentPage()
+    {
+        // Подготовка данных
+        $this->data['logoutForm'] = $this->emptyRender(self::TLOGOUTFORM);
+        $this->data['content'] = $this->commentRender('comment', self::TCOMEDIT);
+        @$this->data['message'] = $this->exceptionRender($this->data['success'], 
+            'success', self::TALERT);
+        @$this->data['message'] .= $this->exceptionRender($this->data['warning'], 
+            'warning', self::TALERT);
+            
+        // Отображение главного шаблона
+        echo $this->render(self::TADMIN);
     }
     
     /**

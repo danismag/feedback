@@ -25,8 +25,8 @@ class Comment extends Model
     */
     public function __construct()
     {
-        $this->edited = 0;
-        $this->approved = 0;
+        $this->edited = $this->edited ?? 0;
+        $this->approved = $this->approved ?? 0;
         
         $this->db = MSQL::instance();
     }
@@ -89,15 +89,15 @@ class Comment extends Model
     *   Выборка отзывов, отсортированных по: дате (по умолч.), имени, email
     *   
     *   @param string $sort - параметр сортировки 'sortbydate', 'sortbyname' , 'sortbyemail'
-    *   @param bool $not_approved - выводить ли неодобренные отзывы
+    *   @param bool $approved - вывод только одобренных отзывов
     *   @return Comment - массив объектов отзывов
     */
-    public static function getComments($sort, $not_approved = false)
+    public static function getComments($sort, $approved = true)
     {
 
         // Выводить ли неодобренные отзывы
-        $where = ($not_approved ? 'WHERE approved = 1' : '');
-
+        $where = ($approved ? 'WHERE approved = 1' : '');
+        
         // анализ параметра сортировки
         switch ($sort) {
 
@@ -164,7 +164,7 @@ class Comment extends Model
 
         return $this->db->update(
             self::TABLE, 
-            self, 
+            $this, 
             ['id_comment' => $this->id_comment]);        
 
     }
@@ -188,6 +188,8 @@ class Comment extends Model
     */
     public function delete()
     {
+        unlink(BASE_PATH . $this->image);
+        
         return $this->db->delete(
             self::TABLE,
             ['id_comment' => $this->id_comment]);

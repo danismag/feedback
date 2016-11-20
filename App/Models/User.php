@@ -52,6 +52,7 @@ class User extends Model
     public static function getUser($login, $password)
     {
         // санитация данных
+        
         $login = filter_var(trim($login), FILTER_SANITIZE_STRING);
         $password = filter_var(trim($password), FILTER_SANITIZE_STRING);
         

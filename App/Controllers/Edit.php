@@ -8,38 +8,79 @@ namespace App\Controllers;
 */
 class Edit extends Base
 {
-       
+    const TITLE = 'Редактирование отзывов';
+    
     /**
     *   Конструктор
     */
-    
-    public function __construct($title, $need_login = false)
+    public function __construct()
     {
-        parent::__construct($title);
-        $this->need_login = $need_login;
-        $this->user = App\Model\User::instance()->get();
+        parent::__construct();
     }
     
-    // отображает страницу для админа
-    protected function actionIndex()
+    /**
+    *   Действия перед вызовом основного метода
+    */
+    protected function before()
     {
-        //TODO
+        if (!\App\Etc\Auth::isLogin()) {
+            
+            $this->redirect('/');
+        }
         
+        parent::before();
     }
     
-    // Проводит одобрение отзыва
-    protected function actionApprove()
+    /**    
+    *   отображает страницу просмотра для админа
+    */
+    protected function actionIndex($sort = 'sortbydate')
     {
-        // TODO
+        $this->view->url = '/edit/index';
+        $this->view->sortby = $sort;        
+        $this->view->feed = \App\Models\Comment::getComments($sort, false);
+        
+        $this->view->adminPage();        
     }
     
-    // Редактирование отзыва
+    /**
+    *   одобрение отзыва
+    */
+    protected function actionApprove($id)
+    {
+        \App\Models\Comment::getCommentById($id)->approve();
+        
+        $this->redirect('/edit/index');
+    }
+    
+    /*
+    *   Отображение отзыва для редактирования
+    */
     protected function actionComment($id)
     {
-        //TODO
+        $this->view->comment = \App\Models\Comment::getCommentById($id);
+        $this->view->sortby = 'no';
+        
+        $this->view->commentPage();
     }
     
+    /*
+    *   Удаление отзыва
+    */
+    protected function actionDelete($id)
+    {
+        \App\Models\Comment::getCommentById($id)->delete();
+        
+        $this->redirect('/edit/index');
+    }
     
+    /*
+    *    выход админа
+    */
+    protected function actionlogout()
+    {
+        $this->logout();
+    }
 }
 
 

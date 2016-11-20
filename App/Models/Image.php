@@ -10,13 +10,14 @@ class Image
     const WIDTH = 320;          // требуемые максимальные размеры
     const HEIGHT = 240;
     
-    public $imagepath;          // Полное имя сохраненной картинки
+    public $imagepath;          // относительный путь к сохраненной картинке
+    private $fullpath;          // полный путь к файлу изображения
     
     /**
     *   Обработка картинки и создание объекта
     *   
     *   @param array $file - массив $_FILES['image']
-    *   @return object $image - объект класса Image или null
+    *   @return Image $image - объект класса Image или null
     */
     public static function create($file)
     {
@@ -28,7 +29,7 @@ class Image
         // проверка на ошибки загрузки
         if ($file['error'] == UPLOAD_ERR_OK) {
 
-            // ограничения на размер файла
+            // ограничения на размер файла не больше 4 Мб
             if ($file['size'] > 4194304) {
                 return null;
             }
@@ -66,7 +67,7 @@ class Image
     */
     public function __destruct()
     {
-        $this->delete($this->imagepath);
+        //$this->delete($this->fullpath);
     }
     
     /**
@@ -90,23 +91,24 @@ class Image
         $name = $this->resize($image);
         
         if ($name){ 
-            if ($name === $image) {
+            if ($name == $image) {
                 
-                $this->imagepath = $image;            
-            } else {
+                $this->fullpath = $image;
+                $this->imagepath = substr($image, strlen(BASE_PATH));
+                           
+            } elseif (file_exists($name)) {
                 
                 $this->delete($image);
-                $this->imagepath = $name;
+                $this->fullpath = $name;
+                $this->imagepath = substr($name, strlen(BASE_PATH));
             }
-               
-        }        
+        }
     }
   
     /**
     *   Пропорциональное уменьшение картинки
     *   
     *   @param string $image - путь к картинке
-    *   
     *   @return string - путь к файлу с размерами, соотв. требованиям либо false
     */
     private function resize($image)
@@ -202,6 +204,7 @@ class Image
         imagedestroy($photo);
 
         if ($result) {
+            
             return $path;
         }
         return false;

@@ -65,7 +65,7 @@ switch($sortby) {
         </div>
 
         <!-- Форма Входа -->
-<?= ($loginForm ?? '<p class="navbar-text">Добрый день, Админ!</p>'); ?>
+<?= ($loginForm ?? ''); ?>
  
         </div>
     </nav>

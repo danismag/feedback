@@ -1,7 +1,7 @@
 <?php if (false): ?>
 <!-- Форма входа -->
 <?php endif; ?>
-<form class="navbar-form navbar-right" method="POST">
+<form class="navbar-form navbar-right" method="POST" action="/page/login">
     <div class="form-group">
         <label class="sr-only" for="loginfield">Логин</label>
         <input type="text" class="form-control" id="loginfield" placeholder="Логин" name="login">
@@ -15,5 +15,5 @@
             <input type="checkbox" name="remember"> Запомнить меня
         </label>
     </div>
-    <button type="submit" class="btn btn-default" name="login" value="1">Войти</button>
+    <button type="submit" class="btn btn-default">Войти</button>
 </form>

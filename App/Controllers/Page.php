@@ -8,58 +8,26 @@ namespace App\Controllers;
 */
 class Page extends Base
 {
-    /**
-    *   Конструктор
-    */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    const TITLE = 'Просмотр оставленных отзывов';
     
     /**
-    *   Действия перед вызовом основного метода
+    *   вывод главной страницы
+    *   сортировка отзывов    
     */
-    public function before()
-    {
-        parent::before();
-    }
-
-    //
-    // вывод главной страницы просмотра
-    // - сортировка отзывов
-    // - ловля исключений
-    // - вывод сообщений о состоянии
     protected function actionIndex($sort = 'sortbydate')
     {
-        $errors = [];       // массив сообщений об ошибках формы отзыва
-        $log = [];          // сообщения об ошибке входа
-        
-        // если были отправлены данные
-        if ($this->isPost()) {
-            
-            if (isset($_POST['login'])) {
-                try {
-                    
-                    $this->login();
-                    
-                } catch(\Exception $e) {
-                    
-                    $log[] = ['message' => $e->getMessage()];
-                }
-            }
-            
-        } 
         
         // передача данных и отрисовка главной страницы
-        $this->view->title = 'Просмотр оставленных отзывов';
-        $this->view->sortby = $sort;
         $this->view->url = '/page/index';
+        $this->view->sortby = $sort;        
         $this->view->feed = \App\Models\Comment::getComments($sort);
-        $this->view->login = $log;
         
         $this->view->mainPage();
     }
-
+    
+    /**
+    *   Предпросмотр отзывов
+    */
     protected function actionPreview()
     {
         /*try {
@@ -76,6 +44,9 @@ class Page extends Base
         //$this->view->preview();
     }
     
+    /**
+    *   Обработка данных формы отзыва
+    */
     protected function actionForm()
     {
         // создание отзыва
@@ -91,15 +62,22 @@ class Page extends Base
        } catch(\App\Exceptions\Multiexception $e) {
            
             $this->view->warning = $e;
+            $this->view->form = $_POST;
            
        } catch(\Exception $e) {
            
            $this->view->success = $e;
        }
        
-       $this->view->form = $_POST;
-                
-       $this->actionIndex();
+       $this->actionIndex();  
+    }
+    
+    /**
+    *   Авторизация пользователя
+    */
+    protected function actionLogin()
+    {
+        $this->login();
     }
 
 }

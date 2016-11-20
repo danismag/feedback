@@ -9,7 +9,7 @@ $username -     имя пользователя, оставившего отзы
 $email -        email пользователя
 $create_time -  дата и время создания отзыва
 $text -         текст отзыва
-$imagepath -        путь к изображению (если есть)
+$image -        путь к изображению (если есть)
 $edited -       был ли отзыв отредактирован
 $edit_time -    время редактирования (если установлен предыдущий параметр)
 -->
@@ -19,8 +19,7 @@ $edit_time -    время редактирования (если установ
     <div class="col-md-8 col-md-offset-2">
 
 <!-- Принят или отклонен отзыв: показано цветом заголовка -->
-   <div class="panel panel-
-<?php if ($approved):?>success<?php else:?>danger<?php endif;?>">
+   <div class="panel panel-<?php if ($approved):?>success<?php else:?>danger<?php endif;?>">
         <div class="panel-heading">
         <p>
             <span class="col-md-3"><?= $username; ?></span>
@@ -30,11 +29,11 @@ $edit_time -    время редактирования (если установ
         </div>
 
         <div class="panel-body">
-<?php if($imagepath): ?>
+<?php if($image): ?>
             <div class="col-md-6">
 
     <!-- Отображение миниатюры картинки, прикрепленной к отзыву -->
-    <span><img class="img-rounded img-responsive center-block" src="<?= $imagepath; ?>">
+    <span><img class="img-rounded img-responsive center-block" src="<?= $image; ?>">
     &nbsp;</span>
             </div>
 <?php endif; ?>
@@ -58,20 +57,20 @@ $edit_time -    время редактирования (если установ
 <?php endif;?>
 
 <span class="col-md-5">
-<form id="edit<?= $id_comment; ?>" class="hidden" method="post" action="/index.php"></form>
-<button type="submit" class="btn btn-info" form="edit<?= $id_comment; ?>" name="edit" 
-    value="<?= $id_comment; ?>">Редактировать</button>
+<form id="edit<?= $id_comment; ?>" class="hidden" method="post" action="/edit/comment/<?= $id_comment; ?>"></form>
+<button type="submit" class="btn btn-info" form="edit<?= $id_comment; ?>">Редактировать</button>
     
 <?php if (!$approved): ?>
 
-<form id="approve<?= $id_comment; ?>" class="hidden" method="post" action="/index.php">
+<form id="approve<?= $id_comment; ?>" class="hidden" method="post" action="/edit/approve/<?= $id_comment; ?>">
 </form>
 <button type="submit" class="btn btn-primary" form="approve<?= $id_comment; ?>" 
-    name="approve" value="<?= $id_comment; ?>" 
-    onclick="ajaxFormRequest('div#<?= $id_comment; ?>', 'form#approve<?= $id_comment; ?>', '/index.php');
-    return false">Одобрить</button>
+    name="approve" value="<?= $id_comment; ?>">Одобрить</button>
     
 <?php endif; ?>
+
+<form id="del<?= $id_comment; ?>" class="hidden" method="post" action="/edit/delete/<?= $id_comment; ?>"></form>
+<button type="submit" class="btn btn-danger" form="del<?= $id_comment; ?>">Удалить</button>
 
 </span>
 </p>
