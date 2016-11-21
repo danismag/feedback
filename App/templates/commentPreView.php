@@ -6,7 +6,7 @@
 $username -     имя пользователя, оставившего отзыв
 $email -        email пользователя
 $text -         текст отзыва
-$imagepath -        путь к изображению (если есть)
+$image -        путь к изображению (если есть)
 
 -->
 <?php endif; ?>
@@ -22,12 +22,12 @@ $imagepath -        путь к изображению (если есть)
         </p>
             </div>
             <div class="panel-body">
-<?php if(($imagepath ?? false)): ?>
+<?php if(($image ?? false)): ?>
             <div class="col-md-6">
 
     <!-- Отображение картинки, прикрепленной к отзыву -->
     <span><img class="img-rounded img-responsive center-block" 
-        src="<?= ($imagepath ?? ''); ?>">&nbsp;</span>
+        src="<?= ($image ?? ''); ?>">&nbsp;</span>
             </div>
 <?php endif; ?>
 

@@ -9,6 +9,7 @@ namespace App\Controllers;
 class Page extends Base
 {
     const TITLE = 'Просмотр оставленных отзывов';
+    const URL = '/page/index';
     
     /**
     *   вывод главной страницы
@@ -18,7 +19,6 @@ class Page extends Base
     {
         
         // передача данных и отрисовка главной страницы
-        $this->view->url = '/page/index';
         $this->view->sortby = $sort;        
         $this->view->feed = \App\Models\Comment::getComments($sort);
         
@@ -30,18 +30,22 @@ class Page extends Base
     */
     protected function actionPreview()
     {
-        /*try {
-            $this->view->comment = \App\Models\Comment::validate(
+        try {
+            $comment = \App\Models\Comment::validate(
                 $_POST['username'], $_POST['email'], $_POST['text']);
+                
+            @$image = \App\Models\Image::create($_FILES[0]);
+            @$comment->image = $image->imagepath;
             
-            $this->view->image = \App\Models\Image::create($_FILES['image']);
+            $this->view->comment = $comment;
+            
+            $this->view->preview();
             
         } catch(\App\Exceptions\Multiexception $e) {
             
-        }*/
+            $this->view->warning = $e;
+        }
        
-       var_dump($_FILES);
-        //$this->view->preview();
     }
     
     /**

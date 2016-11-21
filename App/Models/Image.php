@@ -63,11 +63,12 @@ class Image
     }
     
     /**
-    *   Деструктор - удаляет изображение с сервера
+    *   удаление изображения с сервера
     */
-    public function __destruct()
+    public function clear()
     {
-        //$this->delete($this->fullpath);
+        
+        $this->delete($this->fullpath);
     }
     
     /**

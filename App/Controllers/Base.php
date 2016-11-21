@@ -74,6 +74,7 @@ abstract class Base extends Controller
     protected function before() {
        
        $this->view->title = static::TITLE;
+       $this->view->url = static::URL;       
     }
     
 }

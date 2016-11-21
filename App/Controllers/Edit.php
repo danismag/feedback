@@ -9,6 +9,7 @@ namespace App\Controllers;
 class Edit extends Base
 {
     const TITLE = 'Редактирование отзывов';
+    const URL = '/edit/index';
     
     /**
     *   Конструктор
@@ -23,6 +24,7 @@ class Edit extends Base
     */
     protected function before()
     {
+        // Предотвращение неавторизованного доступа
         if (!\App\Etc\Auth::isLogin()) {
             
             $this->redirect('/');
@@ -36,7 +38,6 @@ class Edit extends Base
     */
     protected function actionIndex($sort = 'sortbydate')
     {
-        $this->view->url = '/edit/index';
         $this->view->sortby = $sort;        
         $this->view->feed = \App\Models\Comment::getComments($sort, false);
         
@@ -48,9 +49,15 @@ class Edit extends Base
     */
     protected function actionApprove($id)
     {
-        \App\Models\Comment::getCommentById($id)->approve();
-        
-        $this->redirect('/edit/index');
+        try {
+            
+            \App\Models\Comment::getCommentById($id)->approve();
+            
+        } catch(\Exception $e) {
+                
+            $this->view->success = $e;
+            $this->actionIndex();
+        }
     }
     
     /*
@@ -62,6 +69,32 @@ class Edit extends Base
         $this->view->sortby = 'no';
         
         $this->view->commentPage();
+    }
+    
+    /*
+    *   Сохранение отзыва после редактирования
+    */
+    protected function actionSave($id)
+    {
+        try {
+           
+           $newcom = \App\Models\Comment::validate($_POST['username'], 
+               $_POST['email'], $_POST['text']);
+               
+           $oldcom = \App\Models\Comment::getCommentById($id);
+           
+           $oldcom->edit($newcom);
+           
+       } catch(\App\Exceptions\Multiexception $e) {
+           
+            $this->view->warning = $e;
+            $this->actionComment($id);
+           
+       } catch(\Exception $e) {
+           
+           $this->view->success = $e;
+           $this->actionIndex();
+       }
     }
     
     /*

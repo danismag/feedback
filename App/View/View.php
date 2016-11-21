@@ -106,11 +106,8 @@ class View
     {
         // Подготовка данных
         $this->data['logoutForm'] = $this->emptyRender(self::TLOGOUTFORM);
-        $this->data['content'] = $this->commentRender('comment', self::TCOMEDIT);
-        @$this->data['message'] = $this->exceptionRender($this->data['success'], 
-            'success', self::TALERT);
-        @$this->data['message'] .= $this->exceptionRender($this->data['warning'], 
-            'warning', self::TALERT);
+        $this->data['content'] = $this->defRender('comment', self::TCOMEDIT);
+        $this->data['message'] = $this->alertsRender('warning', self::TALERT);
             
         // Отображение главного шаблона
         echo $this->render(self::TADMIN);
@@ -125,12 +122,7 @@ class View
     {
         if (isset($this->data['comment'])) {
             
-            if (isset($this->data['image'])) {
-                
-                $this->data['comment'][] = $this->data['image'];
-            }
-            
-            echo $this->commentRender('comment', self::TPREVIEW);
+            echo $this->defRender('comment', self::TPREVIEW);
         }
     }
     

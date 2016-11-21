@@ -145,7 +145,7 @@ class Comment extends Model
 
         if ($this->db->insert(self::TABLE, $this)) {
                 
-            throw new \Exception('Отзыв успешно сохранен');
+            throw new \Exception('Отзыв успешно создан');
                 
             return true;
         }
@@ -161,12 +161,15 @@ class Comment extends Model
     */
     public function save()
     {
-
-        return $this->db->update(
+        $result = $this->db->update(
             self::TABLE, 
             $this, 
-            ['id_comment' => $this->id_comment]);        
-
+            ['id_comment' => $this->id_comment]);
+        
+        throw new \Exception('Отзыв успешно сохранен');
+        
+        return $result;
+        
     }
 
     /**
@@ -194,7 +197,26 @@ class Comment extends Model
             self::TABLE,
             ['id_comment' => $this->id_comment]);
     }
-     
+    
+    /**
+    *   Редактирование комментария
+    *   
+    *   @param Comment $newcom - объект комментария с изменениями
+    */
+    public function edit($newcom)
+    {
+        // Передача отредактированных данных
+        $this->username = $newcom->username;
+        $this->email = $newcom->email;
+        $this->text = $newcom->text;
+        
+        // Внесение сопутсвующих изменений
+        $this->edited = 1;
+        $this->approved = 1;
+        $this->edit_time = date('Y-m-d H:i:s', time());
+        
+        $this->save();
+    }
 }
 
 ?>

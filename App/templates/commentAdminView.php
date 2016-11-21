@@ -29,7 +29,7 @@ $edit_time -    время редактирования (если установ
         </div>
 
         <div class="panel-body">
-<?php if($image): ?>
+<?php if('NULL' != $image): ?>
             <div class="col-md-6">
 
     <!-- Отображение миниатюры картинки, прикрепленной к отзыву -->
@@ -51,12 +51,15 @@ $edit_time -    время редактирования (если установ
 
 <?php if ($edited) :?>
 
-    <span class="col-md-4 text-danger">Изменен администратором</span>
+    <span class="col-md-3 text-danger">Изменен администратором</span>
     <span class="col-md-3 text-muted"><?= $edit_time;?></span>
+<?php else:?>
+    <span class="col-md-3 text-danger">&nbsp;</span>
+    <span class="col-md-3 text-muted">&nbsp;</span>
     
 <?php endif;?>
 
-<span class="col-md-5">
+<span class="col-md-6">
 <form id="edit<?= $id_comment; ?>" class="hidden" method="post" action="/edit/comment/<?= $id_comment; ?>"></form>
 <button type="submit" class="btn btn-info" form="edit<?= $id_comment; ?>">Редактировать</button>
     
