@@ -23,7 +23,6 @@ $(function(){
         $.each(form, function(key, obj){
             
             data.append(obj.name, obj.value);
-           
         });
         
         // Отправка запроса

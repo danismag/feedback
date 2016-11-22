@@ -17,6 +17,8 @@ class Page extends Base
     */
     protected function actionIndex($sort = 'sortbydate')
     {
+        // очистка от временных файлов изображений
+        \App\Models\Comment::clearImages();
         
         // передача данных и отрисовка главной страницы
         $this->view->sortby = $sort;        
@@ -55,13 +57,14 @@ class Page extends Base
     {
         // создание отзыва
         try {
-           
-           $comment = \App\Models\Comment::validate($_POST['username'], 
+            
+            $comment = \App\Models\Comment::validate($_POST['username'], 
                $_POST['email'], $_POST['text']);
-               
-           $comment->image = \App\Models\Image::create($_FILES['image'])->imagepath;
+              
+            @$comment->image = \App\Models\Image::create($_FILES['image'])->imagepath;
            
-           $comment->create();
+           
+            $comment->create();
            
        } catch(\App\Exceptions\Multiexception $e) {
            

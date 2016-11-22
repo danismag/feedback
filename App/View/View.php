@@ -20,6 +20,7 @@ class View
     // Пути к шаблонам
     
     const TMAIN         = BASE_PATH . '/App/templates/mainView.php';
+    const T404          = BASE_PATH . '/App/templates/404.php';
     const TADMIN        = BASE_PATH . '/App/templates/adminView.php';
     const TLOGINFORM    = BASE_PATH . '/App/templates/loginFormView.php';
     const TLOGOUTFORM   = BASE_PATH . '/App/templates/logoutFormView.php';
@@ -124,6 +125,14 @@ class View
             
             echo $this->defRender('comment', self::TPREVIEW);
         }
+    }
+    
+    /**
+    * Отображение 404 страницы
+    */
+    public function page404()
+    {
+        echo $this->emptyRender(self::T404);
     }
     
     /**

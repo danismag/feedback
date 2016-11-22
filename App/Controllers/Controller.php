@@ -36,30 +36,10 @@ abstract class Controller
     */
     public function __call($name, $params)
     {
-        header("HTTP/1.1 404 Not Found");
-        exit();
+        $this->view->page404();
+        
     }
     
-    /**
-    *   Определяет, произведен ли запрос методом GET
-    *
-    *   @return $request boolean 
-    */
-    protected function isGet()
-    {
-        return ($_SERVER['REQUEST_METHOD'] == 'GET');
-    }
-
-    /**
-    *   Определяет, произведен ли запрос методом POST
-    *
-    *   @return $request boolean 
-    */
-    protected function isPost()
-    {
-        return ($_SERVER['REQUEST_METHOD'] == 'POST');
-    }
-        
     /**
     *   Перенаправляет на указанную страницу
     *

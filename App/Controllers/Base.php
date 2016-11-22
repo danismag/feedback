@@ -8,7 +8,7 @@ namespace App\Controllers;
 */
 abstract class Base extends Controller
 {
-    protected $view;                // экземпляр класса для отображения
+    protected $view;                // экземпляр класса для отображения страниц
     
 
     /**
@@ -45,7 +45,6 @@ abstract class Base extends Controller
             
             $this->actionIndex();
         }
-        
     }
     
     /**
@@ -59,17 +58,7 @@ abstract class Base extends Controller
     }
     
     /**
-    *   обработка формы отзыва
-    */
-    protected function feedForm()
-    {
-        // TODO
-    }
-    
-    
-    /**
     *   Действия до вызова основного метода
-    *   проверка авторизации
     */
     protected function before() {
        

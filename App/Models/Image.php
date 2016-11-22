@@ -233,7 +233,6 @@ class Image
         
         return $format;
     }
-
         
     /**
     *   Удаление изображения

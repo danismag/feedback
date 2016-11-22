@@ -11,13 +11,6 @@ class Edit extends Base
     const TITLE = 'Редактирование отзывов';
     const URL = '/edit/index';
     
-    /**
-    *   Конструктор
-    */
-    public function __construct()
-    {
-        parent::__construct();
-    }
     
     /**
     *   Действия перед вызовом основного метода
@@ -102,9 +95,16 @@ class Edit extends Base
     */
     protected function actionDelete($id)
     {
-        \App\Models\Comment::getCommentById($id)->delete();
-        
-        $this->redirect('/edit/index');
+        try {
+            
+            \App\Models\Comment::getCommentById($id)->delete();
+            
+        } catch(\Exception $e) {
+            
+            $this->view->success = $e;
+            
+            $this->actionIndex();
+        }
     }
     
     /*

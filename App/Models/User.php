@@ -21,27 +21,6 @@ class User extends Model
     public $is_admin;       
     public $id_user;
     
-    private static $instance;          // ссылка на текущего пользователя
-    
-    /**
-    *
-    */
-    public function __construct()
-    {
-        self::$instance = $this;
-    }
-    
-    /**
-    *   Возвращает теущего пользователя
-    *
-    *   @return User объект текущего пользователя
-    */
-    public static function currentUser()
-    {
-        return self::$instance;
-        
-    }
-    
     /**
     *   Поиск пользователя по логину и паролю в БД
     *

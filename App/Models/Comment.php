@@ -191,11 +191,19 @@ class Comment extends Model
     */
     public function delete()
     {
-        unlink(BASE_PATH . $this->image);
+        if ('NULL' != $this->image) {
+            
+            unlink(BASE_PATH . $this->image);
+        }
         
-        return $this->db->delete(
+        
+        $result = $this->db->delete(
             self::TABLE,
             ['id_comment' => $this->id_comment]);
+        
+        throw new \Exception('Отзыв удален');
+        
+        return $result;
     }
     
     /**
@@ -216,6 +224,50 @@ class Comment extends Model
         $this->edit_time = date('Y-m-d H:i:s', time());
         
         $this->save();
+    }
+    
+    /**
+    *   очистка папки images от временных файлов-изображений,
+    *   образовавшихся при предпрсмотре
+    */
+    public function clearImages()
+    {
+        // Получаем список файлов в папке images
+        $images = scandir(BASE_PATH . '/images');
+        
+        // Убираем из списка элементы '.' и '..'
+        unset($images[0], $images[1]);
+        
+        // добавляем относительный путь от корня сайта
+        foreach($images as &$img) {
+            
+            $img = '/images/' . $img;
+        }
+        
+        // получаем список всех отзывов
+        $comments = self::findAll();
+        
+        foreach($comments as $com) {
+            
+            if ('NULL' != $com->image) {
+                
+                // получаем ключ
+                $key = array_search($com->image, $images);
+                
+                // удаляем из списка
+                unset($images[$key]);
+            }
+        }
+        
+        // Удаляем несвязанные с записями в базе файлы изображений
+        
+        foreach($images as $img) {
+            
+            if (file_exists(BASE_PATH . $img)) {
+                
+                unlink(BASE_PATH . $img);
+            }
+        }
     }
 }
 
