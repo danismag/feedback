@@ -129,7 +129,7 @@ class Comment extends Model
     *   @param int $id - id отзыва в БД
     *   @return Comment - объект отзыва
     */
-    public function getCommentById($id)
+    public static function getCommentById($id)
     {
 
         return self::findWhere(['id_comment' => $id]);
@@ -230,7 +230,7 @@ class Comment extends Model
     *   очистка папки images от временных файлов-изображений,
     *   образовавшихся при предпрсмотре
     */
-    public function clearImages()
+    public static function clearImages()
     {
         // Получаем список файлов в папке images
         $images = scandir(BASE_PATH . '/images');
