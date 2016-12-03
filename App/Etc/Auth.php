@@ -2,6 +2,8 @@
 
 namespace App\Etc;
 
+use \App\Model\User;
+
 /**
 *   Класс для работы с сессиями
 *
@@ -54,7 +56,7 @@ class Auth
         // и пробуем переподключиться
         if (isset($_COOKIE['password']) && isset($_COOKIE['login'])) {
             
-            $user = \App\Model\User::getUserByLogin($_COOKIE['login']);
+            $user = User::getUserByLogin($_COOKIE['login']);
             
             if ($user) {
                 

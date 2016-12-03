@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use \App\Models\User;
+use \App\Etc\Auth;
+
 /**
 *   Контроллер сайта
 *
@@ -33,9 +36,9 @@ abstract class Base extends Controller
     {
         try {
             
-            $user = \App\Models\User::getUser($_POST['login'], $_POST['password']);
+            $user = User::getUser($_POST['login'], $_POST['password']);
             
-            \App\Etc\Auth::openSession($user, $_POST['remember']);
+            Auth::openSession($user, $_POST['remember']);
         
             $this->redirect('/edit/index');
             
@@ -52,7 +55,7 @@ abstract class Base extends Controller
     */
     protected function logout()
     {
-        \App\Etc\Auth::closeSession();
+        Auth::closeSession();
         
         $this->redirect('/'); 
     }

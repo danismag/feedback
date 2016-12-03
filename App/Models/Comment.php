@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use \App\Exceptions\Multiexception;
+
 /**
 *   Класс для работы с отзывами
 */
@@ -42,7 +44,7 @@ class Comment extends Model
     public static function validate($name, $email, $text)
     {
         // мультиисключение для сообщений об ошибках
-        $err = new \App\Exceptions\Multiexception;
+        $err = new Multiexception;
 
         // Обрезка и фильтрация текста
         $name = filter_var(trim($name), FILTER_SANITIZE_STRING);
@@ -77,7 +79,7 @@ class Comment extends Model
             return null;            
         }
 
-        $comment = new Comment;
+        $comment = new self;
         $comment->username = $name;
         $comment->email = $email;
         $comment->text = $text;

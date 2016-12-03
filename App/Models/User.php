@@ -37,8 +37,7 @@ class User extends Model
         
         if ($login == '' || $password == '') {
             
-            throw new \Exception('Неверная пара логин-пароль');            
-            return null;            
+            throw new \Exception('Неверная пара логин-пароль');  
         }
         
         // ищем пользователя в БД
@@ -47,8 +46,7 @@ class User extends Model
 
         if ($user == null) {
             
-            throw new \Exception('Неверная пара логин-пароль');            
-            return null;
+            throw new \Exception('Неверная пара логин-пароль');
         }
                 
         return $user;               

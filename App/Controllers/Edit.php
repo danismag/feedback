@@ -2,6 +2,10 @@
 
 namespace App\Controllers;
 
+use \App\Models\Comment;
+use \App\Etc\Auth;
+use \App\Exceptions\Multiexception;
+
 /**
 *   Контроллер страниц редактирования (админ)
 *
@@ -18,7 +22,7 @@ class Edit extends Base
     protected function before()
     {
         // Предотвращение неавторизованного доступа
-        if (!\App\Etc\Auth::isLogin()) {
+        if (!Auth::isLogin()) {
             
             $this->redirect('/');
         }
@@ -32,7 +36,7 @@ class Edit extends Base
     protected function actionIndex($sort = 'sortbydate')
     {
         $this->view->sortby = $sort;        
-        $this->view->feed = \App\Models\Comment::getComments($sort, false);
+        $this->view->feed = Comment::getComments($sort, false);
         
         $this->view->adminPage();        
     }
@@ -44,7 +48,7 @@ class Edit extends Base
     {
         try {
             
-            \App\Models\Comment::getCommentById($id)->approve();
+            Comment::getCommentById($id)->approve();
             
         } catch(\Exception $e) {
                 
@@ -58,7 +62,7 @@ class Edit extends Base
     */
     protected function actionComment($id)
     {
-        $this->view->comment = \App\Models\Comment::getCommentById($id);
+        $this->view->comment = Comment::getCommentById($id);
         $this->view->sortby = 'no';
         
         $this->view->commentPage();
@@ -71,14 +75,14 @@ class Edit extends Base
     {
         try {
            
-           $newcom = \App\Models\Comment::validate($_POST['username'], 
+           $newcom = Comment::validate($_POST['username'], 
                $_POST['email'], $_POST['text']);
                
-           $oldcom = \App\Models\Comment::getCommentById($id);
+           $oldcom = Comment::getCommentById($id);
            
            $oldcom->edit($newcom);
            
-       } catch(\App\Exceptions\Multiexception $e) {
+       } catch(Multiexception $e) {
            
             $this->view->warning = $e;
             $this->actionComment($id);
@@ -97,7 +101,7 @@ class Edit extends Base
     {
         try {
             
-            \App\Models\Comment::getCommentById($id)->delete();
+            Comment::getCommentById($id)->delete();
             
         } catch(\Exception $e) {
             

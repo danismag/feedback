@@ -2,6 +2,10 @@
 
 namespace App\Controllers;
 
+use \App\Models\Comment;
+use \App\Models\Image;
+use \App\Exceptions\Multiexception;
+
 /**
 *   Контроллер страниц просмотра
 *
@@ -18,11 +22,11 @@ class Page extends Base
     protected function actionIndex($sort = 'sortbydate')
     {
         // очистка от временных файлов изображений
-        \App\Models\Comment::clearImages();
+        Comment::clearImages();
         
         // передача данных и отрисовка главной страницы
         $this->view->sortby = $sort;        
-        $this->view->feed = \App\Models\Comment::getComments($sort);
+        $this->view->feed = Comment::getComments($sort);
         
         $this->view->mainPage();
     }
@@ -33,17 +37,17 @@ class Page extends Base
     protected function actionPreview()
     {
         try {
-            $comment = \App\Models\Comment::validate(
+            $comment = Comment::validate(
                 $_POST['username'], $_POST['email'], $_POST['text']);
                 
-            @$image = \App\Models\Image::create($_FILES[0]);
+            @$image = Image::create($_FILES[0]);
             @$comment->image = $image->imagepath;
             
             $this->view->comment = $comment;
             
             $this->view->preview();
             
-        } catch(\App\Exceptions\Multiexception $e) {
+        } catch(Multiexception $e) {
             
             $this->view->warning = $e;
         }
@@ -58,15 +62,15 @@ class Page extends Base
         // создание отзыва
         try {
             
-            $comment = \App\Models\Comment::validate($_POST['username'], 
+            $comment = Comment::validate($_POST['username'], 
                $_POST['email'], $_POST['text']);
               
-            @$comment->image = \App\Models\Image::create($_FILES['image'])->imagepath;
+            @$comment->image = Image::create($_FILES['image'])->imagepath;
            
            
             $comment->create();
            
-       } catch(\App\Exceptions\Multiexception $e) {
+       } catch(Multiexception $e) {
            
             $this->view->warning = $e;
             $this->view->form = $_POST;
